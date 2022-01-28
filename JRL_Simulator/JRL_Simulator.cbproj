@@ -128,6 +128,10 @@
         <PCHCompile Include="JRL_SimulatorPCH1.h">
             <BuildOrder>1</BuildOrder>
         </PCHCompile>
+        <CppCompile Include="libxl_functions.cpp">
+            <DependentOn>libxl_functions.h</DependentOn>
+            <BuildOrder>4</BuildOrder>
+        </CppCompile>
         <CppCompile Include="Main.cpp">
             <Form>FormMain</Form>
             <FormType>dfm</FormType>
