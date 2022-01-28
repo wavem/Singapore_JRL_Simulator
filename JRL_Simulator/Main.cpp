@@ -74,6 +74,35 @@ TFormMain *FormMain;
 __fastcall TFormMain::TFormMain(TComponent* Owner)
 	: TForm(Owner)
 {
+	InitProgram();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TFormMain::FormClose(TObject *Sender, TCloseAction &Action)
+{
+	ExitProgram();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TFormMain::InitProgram() {
+	PrintMsg(L"Init Complete");
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TFormMain::ExitProgram() {
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TFormMain::PrintMsg(UnicodeString _str) {
+	int t_Line = memo->Lines->Add(_str);
+	memo->SetCursor(0, t_Line);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TFormMain::PrintData(UnicodeString _str) {
+	int t_Line = memo_Data->Lines->Add(_str);
+	memo_Data->SetCursor(0, t_Line);
 }
 //---------------------------------------------------------------------------
 
@@ -84,3 +113,4 @@ void __fastcall TFormMain::MainButtonClick(TObject *Sender)
     Notebook_Main->PageIndex = t_Tag;
 }
 //---------------------------------------------------------------------------
+
