@@ -4,6 +4,7 @@
 #define MainH
 //---------------------------------------------------------------------------
 #include "Define.h"
+#include "libxl.h"
 //---------------------------------------------------------------------------
 #include <System.Classes.hpp>
 #include <Vcl.Controls.hpp>
