@@ -458,6 +458,7 @@ object FormMain: TFormMain
       Category = 0
       Hint = 'Connect'
       Visible = ivAlways
+      OnClick = MainButtonClick
       HotGlyph.Data = {
         36100000424D3610000000000000360000002800000020000000200000000100
         2000000000000010000000000000000000000000000000000000000000000000
@@ -592,10 +593,12 @@ object FormMain: TFormMain
       Width = 60
     end
     object MainBtn_Protocol: TdxBarLargeButton
+      Tag = 1
       Caption = 'R-Time Protocol'
       Category = 0
       Hint = 'R-Time Protocol'
       Visible = ivAlways
+      OnClick = MainButtonClick
       HotGlyph.Data = {
         36100000424D3610000000000000360000002800000020000000200000000100
         2000000000000010000000000000000000000000000000000000000000000000
@@ -730,10 +733,12 @@ object FormMain: TFormMain
       Width = 60
     end
     object MainBtn_Setting: TdxBarLargeButton
+      Tag = 2
       Caption = 'Setting'
       Category = 0
       Hint = 'Setting'
       Visible = ivAlways
+      OnClick = MainButtonClick
       HotGlyph.Data = {
         36100000424D3610000000000000360000002800000020000000200000000100
         2000000000000010000000000000000000000000000000000000000000000000
@@ -1144,10 +1149,12 @@ object FormMain: TFormMain
       Width = 60
     end
     object MainBtn_Generator: TdxBarLargeButton
+      Tag = 3
       Caption = 'Generator'
       Category = 0
       Hint = 'Generator'
       Visible = ivAlways
+      OnClick = MainButtonClick
       HotGlyph.Data = {
         36100000424D3610000000000000360000002800000020000000200000000100
         2000000000000010000000000000000000000000000000000000000000000000

@@ -92,6 +92,7 @@ __published:	// IDE-managed Components
 	TPanel *__pnBase_01_Protocol;
 	TPanel *__pnBase_02_Setting;
 	TPanel *__pnBase_03_Generator;
+	void __fastcall MainButtonClick(TObject *Sender);
 private:	// User declarations
 public:		// User declarations
 	__fastcall TFormMain(TComponent* Owner);
