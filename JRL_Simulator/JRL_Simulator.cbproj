@@ -117,6 +117,10 @@
         <BCC_PCHName_Clang>JRL_SimulatorPCH1.h</BCC_PCHName_Clang>
     </PropertyGroup>
     <ItemGroup>
+        <CppCompile Include="Define.cpp">
+            <DependentOn>Define.h</DependentOn>
+            <BuildOrder>3</BuildOrder>
+        </CppCompile>
         <CppCompile Include="JRL_Simulator.cpp">
             <BuildOrder>0</BuildOrder>
         </CppCompile>
