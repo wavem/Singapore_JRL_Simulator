@@ -69,6 +69,7 @@
 #pragma link "dxSkinXmas2008Blue"
 #pragma link "AdvMemo"
 #pragma resource "*.dfm"
+#pragma link "libxl.lib"
 TFormMain *FormMain;
 //---------------------------------------------------------------------------
 __fastcall TFormMain::TFormMain(TComponent* Owner)
