@@ -107,6 +107,10 @@ public: // Basic Functions
     void __fastcall PrintMsg(UnicodeString _str);
     void __fastcall PrintData(UnicodeString _str);
 
+public: // Libxl
+	libxl::Book* m_Book;
+	bool __fastcall InitConfigExcelFile();
+
 
 
 public: // User Message Handler

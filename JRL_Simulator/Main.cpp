@@ -85,15 +85,47 @@ void __fastcall TFormMain::FormClose(TObject *Sender, TCloseAction &Action)
 }
 //---------------------------------------------------------------------------
 
-void __fastcall TFormMain::InitProgram() {
-	PrintMsg(L"Init Complete");
-}
-//---------------------------------------------------------------------------
-
 void __fastcall TFormMain::ExitProgram() {
 
 }
 //---------------------------------------------------------------------------
+
+void __fastcall TFormMain::InitProgram() {
+
+	if(InitConfigExcelFile() == false) {
+    	return;
+    } else {
+    	PrintMsg(L"Config File Init Complete");
+    }
+
+	PrintMsg(L"Init Complete");
+}
+//---------------------------------------------------------------------------
+
+bool __fastcall TFormMain::InitConfigExcelFile() {
+
+	m_Book = xlCreateXMLBook();
+    if(m_Book) {
+    	m_Book->setKey(L"ÁØÈ£ ¾ç", L"windows-2d20200d03c0ed046aba6867a7n0m2j0");
+        if(m_Book->load(L"Config\\Config.xlsx")) {
+            // Load Real-Time Protocol List & Printout on the Grid
+            //LoadRealTimeProtocolList();
+
+            PrintMsg(L"Load Complete");
+		} else {
+			PrintMsg(L"Fail to Load Excel File");
+            return false;
+		}
+    } else {
+    	PrintMsg(L"Fail to Create XML BOOK");
+        return false;
+    }
+
+	return true;
+}
+//---------------------------------------------------------------------------
+
+
 
 void __fastcall TFormMain::PrintMsg(UnicodeString _str) {
 	int t_Line = memo->Lines->Add(_str);
