@@ -114,3 +114,15 @@ void __fastcall TFormMain::MainButtonClick(TObject *Sender)
 }
 //---------------------------------------------------------------------------
 
+void __fastcall TFormMain::PrintThreadLogMessage(TMessage &_msg) {
+	unsigned int t_wParam = _msg.WParam;
+	int t_lParam = _msg.LParam;
+
+	UnicodeString tempStr = L"";
+	UnicodeString *p = NULL;
+	p = (UnicodeString*)t_wParam;
+	tempStr = *p;
+	PrintMsg(tempStr);
+}
+//---------------------------------------------------------------------------
+

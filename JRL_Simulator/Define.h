@@ -6,5 +6,11 @@
 #include <System.Classes.hpp>
 
 
+
+
+// Define Message Code
+#define MSG_LOG_FROM_THREAD		0
+
+
 //---------------------------------------------------------------------------
 #endif
