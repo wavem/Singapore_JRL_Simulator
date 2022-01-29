@@ -5,6 +5,7 @@
 //---------------------------------------------------------------------------
 #include "Define.h"
 #include "libxl.h"
+#include "libxl_functions"
 //---------------------------------------------------------------------------
 #include <System.Classes.hpp>
 #include <Vcl.Controls.hpp>
