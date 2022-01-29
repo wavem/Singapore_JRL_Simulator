@@ -122,6 +122,12 @@
             <DependentOn>Define.h</DependentOn>
             <BuildOrder>3</BuildOrder>
         </CppCompile>
+        <CppCompile Include="Dlg_Version.cpp">
+            <Form>Form1</Form>
+            <FormType>dfm</FormType>
+            <DependentOn>Dlg_Version.h</DependentOn>
+            <BuildOrder>5</BuildOrder>
+        </CppCompile>
         <CppCompile Include="JRL_Simulator.cpp">
             <BuildOrder>0</BuildOrder>
         </CppCompile>
@@ -139,6 +145,7 @@
             <BuildOrder>2</BuildOrder>
         </CppCompile>
         <FormResources Include="Main.dfm"/>
+        <FormResources Include="Dlg_Version.dfm"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
