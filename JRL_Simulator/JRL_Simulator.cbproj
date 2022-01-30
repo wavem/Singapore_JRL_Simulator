@@ -118,6 +118,10 @@
         <BCC_PCHName_Clang>JRL_SimulatorPCH1.h</BCC_PCHName_Clang>
     </PropertyGroup>
     <ItemGroup>
+        <CppCompile Include="common_functions.cpp">
+            <DependentOn>common_functions.h</DependentOn>
+            <BuildOrder>6</BuildOrder>
+        </CppCompile>
         <CppCompile Include="Define.cpp">
             <DependentOn>Define.h</DependentOn>
             <BuildOrder>3</BuildOrder>

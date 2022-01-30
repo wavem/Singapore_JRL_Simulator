@@ -127,8 +127,6 @@ bool __fastcall TFormMain::InitConfigExcelFile() {
 }
 //---------------------------------------------------------------------------
 
-
-
 void __fastcall TFormMain::PrintMsg(UnicodeString _str) {
 	int t_Line = memo->Lines->Add(_str);
 	memo->SetCursor(0, t_Line);
