@@ -5,6 +5,7 @@
 
 #include "Main.h"
 #include "libxl_functions.h"
+#include "Dlg_Version.h"
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 #pragma link "cxClasses"
@@ -157,6 +158,14 @@ void __fastcall TFormMain::PrintThreadLogMessage(TMessage &_msg) {
 	p = (UnicodeString*)t_wParam;
 	tempStr = *p;
 	PrintMsg(tempStr);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TFormMain::MainBtn_VersionClick(TObject *Sender)
+{
+	TFormVersion *p_dlg = new TFormVersion(NULL);
+    p_dlg->ShowModal();
+    delete p_dlg;
 }
 //---------------------------------------------------------------------------
 

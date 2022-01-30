@@ -878,6 +878,7 @@ object FormMain: TFormMain
       Category = 0
       Hint = 'Version'
       Visible = ivAlways
+      OnClick = MainBtn_VersionClick
       HotGlyph.Data = {
         36100000424D3610000000000000360000002800000020000000200000000100
         2000000000000010000000000000000000000000000000000000000000000000

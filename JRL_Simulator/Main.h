@@ -97,6 +97,7 @@ __published:	// IDE-managed Components
 	TPanel *__pnBase_03_Generator;
 	void __fastcall MainButtonClick(TObject *Sender);
 	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
+	void __fastcall MainBtn_VersionClick(TObject *Sender);
 private:	// User declarations
 public:		// User declarations
 	__fastcall TFormMain(TComponent* Owner);
