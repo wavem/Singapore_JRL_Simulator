@@ -114,6 +114,20 @@ public: // Libxl
 	libxl::Book* m_Book;
 	bool __fastcall InitConfigExcelFile();
 
+public: // SOCKET
+	SOCKET m_sock_MCast;
+	bool __fastcall CreateMCastSocket();
+	bool __fastcall CreateMCastThread();
+	CMCastSocketThread* m_MCastThread;
+	AnsiString m_LocalIPstr;
+	AnsiString m_ServerIPstr;
+	unsigned short m_ServerPort;
+	unsigned short m_LocalPort;
+	BYTE m_SendBuf[1500];
+	BYTE m_RecvBuf[1500];
+	int __fastcall SendPacket();
+
+
 
 
 public: // User Message Handler

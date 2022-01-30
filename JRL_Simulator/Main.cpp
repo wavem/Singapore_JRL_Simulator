@@ -90,11 +90,68 @@ void __fastcall TFormMain::FormClose(TObject *Sender, TCloseAction &Action)
 
 void __fastcall TFormMain::ExitProgram() {
 
+
+	// Socket Clean Up
+	WSACleanup();
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TFormMain::InitProgram() {
 
+	// Common
+    UnicodeString tempStr = L"";
+
+	// Default Notebook Page Setting
+    Notebook_Main->PageIndex = 0;
+
+
+
+
+	// Init Variables...
+	m_sock_MCast = INVALID_SOCKET;
+	m_MCastThread = NULL;
+	m_LocalIPstr = "";
+	m_ServerIPstr = "";
+	m_ServerPort = 0;
+	m_LocalPort = 0;
+	memset(m_SendBuf, 0, MCAST_SEND_BUF_SIZE);
+	memset(m_RecvBuf, 0, MCAST_RECV_BUF_SIZE);
+	//m_SendProtocolSize = 0;
+	//m_RecvProtocolSize = 0;
+	//m_bIsBigEndian = false;
+	//m_bIsOnLogFile = false;
+	//m_bIsOnBinaryFile = false;
+	//m_bIsSigned = false;
+	//m_fp_Log = NULL;
+
+
+    // Init Grids
+
+
+    // Socket Init
+    WSADATA data;
+	WORD version;
+	int ret = 0;
+
+	version = MAKEWORD(2, 2);
+	ret = WSAStartup(version, &data);
+	if(ret != 0) {
+		ret = WSAGetLastError();
+		if(ret == WSANOTINITIALISED) {
+			tempStr.sprintf(L"Socket not initialised (error code : %d)", ret);
+			PrintMsg(tempStr);
+		} else {
+			tempStr.sprintf(L"Socket error (error code : %d)", ret);
+			PrintMsg(tempStr);
+		}
+	} else {
+		PrintMsg(L"Socket init success");
+	}
+
+
+
+
+    // Config File Init Routine
 	if(InitConfigExcelFile() == false) {
     	return;
     } else {
@@ -167,4 +224,64 @@ void __fastcall TFormMain::MainBtn_VersionClick(TObject *Sender)
     delete p_dlg;
 }
 //---------------------------------------------------------------------------
+
+bool __fastcall TFormMain::CreateMCastSocket() {
+
+	// Pre return
+	if(m_sock_MCast != INVALID_SOCKET) {
+		PrintMsg(L"Socket exists already");
+		return false;
+	}
+
+	// Common
+	UnicodeString tempStr = L"";
+	AnsiString t_AnsiStr = "";
+	unsigned short t_Port = 0;
+	struct sockaddr_in t_sockaddr_in;
+	memset(&t_sockaddr_in, 0, sizeof(t_sockaddr_in));
+
+	// Input Comm Information
+	t_sockaddr_in.sin_family = AF_INET;
+	t_sockaddr_in.sin_addr.s_addr = inet_addr(m_LocalIPstr.c_str());
+	t_sockaddr_in.sin_port = htons(m_LocalPort);
+
+	// Create Socket
+	m_sock_MCast = socket(AF_INET, SOCK_DGRAM, 0);
+	if(m_sock_MCast == INVALID_SOCKET) {
+		PrintMsg(L"Fail to create socket");
+		return false;
+	}
+
+#if 0
+	// Set Socket Option : REUSE
+	int t_opt_reuse = 1;
+	if(setsockopt(m_sock_UDP, SOL_SOCKET, SO_REUSEADDR,(char *)&t_opt_reuse, sizeof(t_opt_reuse)) == SOCKET_ERROR) {
+		PrintMsg(L"Fail to set socket option (REUSE)");
+		return false;
+	}
+
+	// Get Recv Buffer Size
+	int t_recvBufferSize = 0;
+	int t_optSize = sizeof(t_recvBufferSize);
+	if(getsockopt(m_sock_UDP, SOL_SOCKET, SO_RCVBUF, (char*)&t_recvBufferSize, &t_optSize) == SOCKET_ERROR) {
+		PrintMsg(L"Fail to get socket recv buffer size");
+	} else {
+		tempStr.sprintf(L"Recv Buffer Size : %d", t_recvBufferSize);
+		PrintMsg(tempStr);
+	}
+
+
+	// Bind
+	if(bind(m_sock_UDP, (struct sockaddr*)&t_sockaddr_in, sizeof(t_sockaddr_in)) < 0) {
+		PrintMsg(L"Bind error");
+		return false;
+	}
+	tempStr = L"Bind Local IP : ";
+	tempStr += inet_ntoa(t_sockaddr_in.sin_addr);
+	PrintMsg(tempStr);
+	return true;
+#endif
+}
+//---------------------------------------------------------------------------
+
 
