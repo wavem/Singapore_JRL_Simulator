@@ -7,7 +7,7 @@
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 
-__fastcall CUdpSocketThread::CUdpSocketThread(SOCKET *p_sock) {
+__fastcall CMCastSocketThread::CMCastSocketThread(SOCKET *p_sock) {
 	m_eThreadWork = THREAD_STOP;
 	Priority = tpTimeCritical;
 	m_sock = p_sock;
@@ -17,13 +17,13 @@ __fastcall CUdpSocketThread::CUdpSocketThread(SOCKET *p_sock) {
 }
 //---------------------------------------------------------------------------
 
-__fastcall CUdpSocketThread::~CUdpSocketThread() {
+__fastcall CMCastSocketThread::~CMCastSocketThread() {
 	UnicodeString tempStr = L"Thread Terminated (from Thread Destroyer)";
 	SendMessage(FormMain->Handle, MSG_LOG_FROM_THREAD, (unsigned int)&tempStr, 0x10);
 }
 //---------------------------------------------------------------------------
 
-void __fastcall CUdpSocketThread::Execute() {
+void __fastcall CMCastSocketThread::Execute() {
 
 	// Common
 	UnicodeString t_Str = L"";
@@ -158,22 +158,22 @@ void __fastcall CUdpSocketThread::Execute() {
 
 
 
-void __fastcall CUdpSocketThread::Stop() {
+void __fastcall CMCastSocketThread::Stop() {
 	m_eThreadWork = THREAD_STOP;
 }
 //---------------------------------------------------------------------------
 
-void __fastcall CUdpSocketThread::Resume() {
+void __fastcall CMCastSocketThread::Resume() {
 	m_eThreadWork = THREAD_RUNNING;
 }
 //---------------------------------------------------------------------------
 
-void __fastcall CUdpSocketThread::DoTerminate() {
+void __fastcall CMCastSocketThread::DoTerminate() {
 	m_eThreadWork = THREAD_TERMINATED;
 }
 //---------------------------------------------------------------------------
 
-ThreadWorkingType __fastcall CUdpSocketThread::GetThreadStatus() {
+ThreadWorkingType __fastcall CMCastSocketThread::GetThreadStatus() {
 	return m_eThreadWork;
 }
 //---------------------------------------------------------------------------

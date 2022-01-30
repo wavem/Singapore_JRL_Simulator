@@ -14,7 +14,7 @@ enum ThreadWorkingType
 };
 //---------------------------------------------------------------------------
 
-class CUdpSocketThread : public TThread {
+class CMCastSocketThread : public TThread {
 private:
 	ThreadWorkingType	m_eThreadWork;
 	SOCKET	*m_sock;
@@ -29,8 +29,8 @@ public: // Variables
 	bool isConnected;
 
 public: // Functions
-	__fastcall CUdpSocketThread(SOCKET *p_sock);
-	__fastcall ~CUdpSocketThread();
+	__fastcall CMCastSocketThread(SOCKET *p_sock);
+	__fastcall ~CMCastSocketThread();
 	bool __fastcall Receive();
 	void __fastcall Execute();
 	void __fastcall Stop();

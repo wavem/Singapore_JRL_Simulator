@@ -5,6 +5,7 @@
 //---------------------------------------------------------------------------
 #include "Define.h"
 #include "libxl.h"
+#include "MulticastSocketThread.h"
 //---------------------------------------------------------------------------
 #include <System.Classes.hpp>
 #include <Vcl.Controls.hpp>
@@ -74,6 +75,7 @@
 #include "dxSkinXmas2008Blue.hpp"
 #include "AdvMemo.hpp"
 //---------------------------------------------------------------------------
+class CMCastSocketThread;
 class TFormMain : public TForm
 {
 __published:	// IDE-managed Components
