@@ -123,7 +123,7 @@
             <BuildOrder>3</BuildOrder>
         </CppCompile>
         <CppCompile Include="Dlg_Version.cpp">
-            <Form>Form1</Form>
+            <Form>FormVersion</Form>
             <FormType>dfm</FormType>
             <DependentOn>Dlg_Version.h</DependentOn>
             <BuildOrder>5</BuildOrder>
