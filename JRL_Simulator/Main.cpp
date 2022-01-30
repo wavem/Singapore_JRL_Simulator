@@ -5,6 +5,7 @@
 
 #include "Main.h"
 #include "libxl_functions.h"
+#include "common_functions.h"
 #include "Dlg_Version.h"
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
