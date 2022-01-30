@@ -148,6 +148,10 @@
             <DependentOn>Main.h</DependentOn>
             <BuildOrder>2</BuildOrder>
         </CppCompile>
+        <CppCompile Include="MulticastSocketThread.cpp">
+            <DependentOn>MulticastSocketThread.h</DependentOn>
+            <BuildOrder>7</BuildOrder>
+        </CppCompile>
         <FormResources Include="Main.dfm"/>
         <FormResources Include="Dlg_Version.dfm"/>
         <BuildConfiguration Include="Release">
