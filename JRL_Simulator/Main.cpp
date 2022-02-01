@@ -267,11 +267,6 @@ bool __fastcall TFormMain::CreateMCastSocket() {
 		return false;
 	}
 
-	// Input Comm Information
-	t_sockaddr_in.sin_family = AF_INET;
-    t_sockaddr_in.sin_addr.s_addr = htonl(INADDR_ANY);
-    t_sockaddr_in.sin_port = htons(MULTICAST_PORT);
-
 	// Set Socket Option : REUSE
 	int t_opt_reuse = 1;
 	if(setsockopt(m_sock_MCast, SOL_SOCKET, SO_REUSEADDR,(char *)&t_opt_reuse, sizeof(t_opt_reuse)) == SOCKET_ERROR) {
@@ -289,6 +284,39 @@ bool __fastcall TFormMain::CreateMCastSocket() {
 		PrintMsg(tempStr);
 	}
 
+    // Input Comm Information
+	t_sockaddr_in.sin_family = AF_INET;
+    t_sockaddr_in.sin_addr.s_addr = htonl(INADDR_ANY);
+    t_sockaddr_in.sin_port = htons(MULTICAST_PORT);
+
+/*
+	// Setting Multicast TTL
+    int ttl = 2;
+    if(setsockopt(m_sock_MCast, IPPROTO_IP, IP_MULTICAST_TTL, (char*)&ttl, sizeof(ttl)) == SOCKET_ERROR) {
+    	PrintMsg(L"Multicast TTL Option Error");
+        return false;
+    }
+*/
+
+    // Disable loopback so you do not receive your own datagrams.
+
+    char loopch=0;
+    if (setsockopt(m_sock_MCast, IPPROTO_IP, IP_MULTICAST_LOOP, (char *)&loopch, sizeof(loopch)) < 0)
+    {
+    	PrintMsg("ERROR : IP_MULTICAST_LOOP:");
+        return false;
+    }
+
+
+    // Setting NIC
+    IN_ADDR t_LocalAddr;
+    t_LocalAddr.s_addr = inet_addr(MULTICAST_IP);
+    if(setsockopt(m_sock_MCast, IPPROTO_IP, IP_MULTICAST_IF, (char*)&t_LocalAddr, sizeof(t_LocalAddr)) == SOCKET_ERROR) {
+    	PrintMsg(L"Multicast Interface Error");
+        return false;
+    }
+
+/*
     // Bind
 	if(bind(m_sock_MCast, (struct sockaddr*)&t_sockaddr_in, sizeof(t_sockaddr_in)) < 0) {
 		PrintMsg(L"Bind error");
@@ -297,17 +325,21 @@ bool __fastcall TFormMain::CreateMCastSocket() {
 	tempStr = L"Bind Local IP : ";
 	tempStr += inet_ntoa(t_sockaddr_in.sin_addr);
 	PrintMsg(tempStr);
+*/
 
+    /*
 	// Join to Multicast Group
     struct ip_mreq t_ip_mreq;
 	ZeroMemory(&t_ip_mreq, sizeof(t_ip_mreq));
 	t_ip_mreq.imr_multiaddr.s_addr = inet_addr(MULTICAST_IP);
     //t_ip_mreq.imr_interface.s_addr = inet_addr(LOCAL_IP); // LOCAL 넣어주지 않아도 됨.
-    t_ip_mreq.imr_interface.s_addr = htonl(INADDR_ANY);
+    //t_ip_mreq.imr_interface.s_addr = htonl(INADDR_ANY);
+    t_ip_mreq.imr_interface.s_addr = inet_addr("192.168.0.53");
 	if(setsockopt(m_sock_MCast, IPPROTO_IP, IP_ADD_MEMBERSHIP, (char *) &t_ip_mreq, sizeof(t_ip_mreq)) == SOCKET_ERROR) {
 		PrintMsg(L"Fail to join multicast group");
 		return false;
 	}
+    */
 
 	return true;
 }
@@ -332,8 +364,11 @@ void __fastcall TFormMain::MainBtn_TestClick(TObject *Sender)
 	t_sockaddr_in.sin_family = AF_INET;
 	//t_sockaddr_in.sin_addr.s_addr = inet_addr(m_ServerIPstr.c_str());
     //t_sockaddr_in.sin_addr.s_addr = inet_addr("192.168.0.132");
-    t_sockaddr_in.sin_addr.s_addr = inet_addr(LOCAL_IP);
+    //t_sockaddr_in.sin_addr.s_addr = inet_addr(LOCAL_IP);
+    t_sockaddr_in.sin_addr.s_addr = inet_addr(MULTICAST_IP);
+    //t_sockaddr_in.sin_addr.s_addr = htonl(INADDR_ANY);
 	t_sockaddr_in.sin_port = htons(14759);
+
 
 	t_SendSize = sendto(m_sock_MCast, m_SendBuf, 100, 0, (struct sockaddr*)&t_sockaddr_in, sizeof(t_sockaddr_in));
 	t_Str.sprintf(L"[SEND] Size : %04d", t_SendSize);
