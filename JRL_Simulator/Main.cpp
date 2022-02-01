@@ -7,6 +7,10 @@
 #include "libxl_functions.h"
 #include "common_functions.h"
 #include "Dlg_Version.h"
+#include <ws2tcpip.h> //#include <ws2ipdef.h> 는 ws2tcpip.h 에 자동으로 포함되며 직접 사용하면 안된다.
+//#include <tlhelp32.h>
+//#include <stdio.h>
+//#include <shlwapi.h>
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 #pragma link "cxClasses"
@@ -110,7 +114,8 @@ void __fastcall TFormMain::InitProgram() {
 	// Init Variables...
 	m_sock_MCast = INVALID_SOCKET;
 	m_MCastThread = NULL;
-	m_LocalIPstr = "";
+	//m_LocalIPstr = "";
+    m_LocalIPstr = "192.168.0.132";
 	m_ServerIPstr = "";
 	m_ServerPort = 0;
 	m_LocalPort = 0;
@@ -157,6 +162,21 @@ void __fastcall TFormMain::InitProgram() {
     } else {
     	PrintMsg(L"Config File Init Complete");
     }
+
+
+    // Create Socket
+
+    if(CreateMCastSocket() == false) {
+
+    	return;
+    } else {
+        PrintMsg(L"Multicast Socket Complete");
+    }
+
+
+    // Create Multicast Socket Thread
+
+
 
 	PrintMsg(L"Init Complete");
 }
@@ -242,20 +262,22 @@ bool __fastcall TFormMain::CreateMCastSocket() {
 
 	// Input Comm Information
 	t_sockaddr_in.sin_family = AF_INET;
-	t_sockaddr_in.sin_addr.s_addr = inet_addr(m_LocalIPstr.c_str());
-	t_sockaddr_in.sin_port = htons(m_LocalPort);
+	//t_sockaddr_in.sin_addr.s_addr = inet_addr(m_LocalIPstr.c_str());
+    t_sockaddr_in.sin_addr.s_addr = inet_addr(LOCAL_IP);
+    //t_sockaddr_in.sin_addr.s_addr = htonl(INADDR_ANY);
+	//t_sockaddr_in.sin_port = htons(m_LocalPort);
+    t_sockaddr_in.sin_port = htons(MULTICAST_PORT);
 
 	// Create Socket
-	m_sock_MCast = socket(AF_INET, SOCK_DGRAM, 0);
+	m_sock_MCast = socket(AF_INET, SOCK_DGRAM, IPPROTO_IP);
 	if(m_sock_MCast == INVALID_SOCKET) {
 		PrintMsg(L"Fail to create socket");
 		return false;
 	}
 
-#if 0
 	// Set Socket Option : REUSE
 	int t_opt_reuse = 1;
-	if(setsockopt(m_sock_UDP, SOL_SOCKET, SO_REUSEADDR,(char *)&t_opt_reuse, sizeof(t_opt_reuse)) == SOCKET_ERROR) {
+	if(setsockopt(m_sock_MCast, SOL_SOCKET, SO_REUSEADDR,(char *)&t_opt_reuse, sizeof(t_opt_reuse)) == SOCKET_ERROR) {
 		PrintMsg(L"Fail to set socket option (REUSE)");
 		return false;
 	}
@@ -263,25 +285,87 @@ bool __fastcall TFormMain::CreateMCastSocket() {
 	// Get Recv Buffer Size
 	int t_recvBufferSize = 0;
 	int t_optSize = sizeof(t_recvBufferSize);
-	if(getsockopt(m_sock_UDP, SOL_SOCKET, SO_RCVBUF, (char*)&t_recvBufferSize, &t_optSize) == SOCKET_ERROR) {
+	if(getsockopt(m_sock_MCast, SOL_SOCKET, SO_RCVBUF, (char*)&t_recvBufferSize, &t_optSize) == SOCKET_ERROR) {
 		PrintMsg(L"Fail to get socket recv buffer size");
 	} else {
 		tempStr.sprintf(L"Recv Buffer Size : %d", t_recvBufferSize);
 		PrintMsg(tempStr);
 	}
 
-
-	// Bind
-	if(bind(m_sock_UDP, (struct sockaddr*)&t_sockaddr_in, sizeof(t_sockaddr_in)) < 0) {
+    // Bind
+	if(bind(m_sock_MCast, (struct sockaddr*)&t_sockaddr_in, sizeof(t_sockaddr_in)) < 0) {
 		PrintMsg(L"Bind error");
 		return false;
 	}
 	tempStr = L"Bind Local IP : ";
 	tempStr += inet_ntoa(t_sockaddr_in.sin_addr);
 	PrintMsg(tempStr);
+
+	// Join to Multicast Group
+    struct ip_mreq t_ip_mreq;
+
+	//t_AnsiStr = (AnsiString)m_MyIP;
+	ZeroMemory(&t_ip_mreq, sizeof(t_ip_mreq));
+	t_ip_mreq.imr_multiaddr.s_addr = inet_addr(MULTICAST_IP);
+	//m_ip_mreq.imr_interface.s_addr = inet_addr(LOCAL_IP);
+	//t_ip_mreq.imr_interface.s_addr = inet_addr(m_LocalIPstr.c_str());
+    t_ip_mreq.imr_interface.s_addr = inet_addr(LOCAL_IP);
+	if(setsockopt(m_sock_MCast, IPPROTO_IP, IP_ADD_MEMBERSHIP, (char *) &t_ip_mreq, sizeof(t_ip_mreq)) == SOCKET_ERROR) {
+		PrintMsg(L"Fail to join multicast group");
+		return false;
+	}
+
 	return true;
+
+#if 0
+    // Bind to the proper port number with the IP address
+	ZeroMemory(&m_addr_in, sizeof(m_addr_in));
+	m_addr_in.sin_family = AF_INET;
+	m_addr_in.sin_addr.s_addr = htonl(INADDR_ANY);
+	m_addr_in.sin_port = htons(MULTICAST_PORT);
+	if(bind(m_MCast_socket, (struct sockaddr*)&m_addr_in, sizeof(m_addr_in))) {
+		PrintMsg(L"Fail to bind multicast socket");
+		return false;
+	}
+
+    return true;
 #endif
 }
 //---------------------------------------------------------------------------
 
+
+void __fastcall TFormMain::MainBtn_TestClick(TObject *Sender)
+{
+	if(m_sock_MCast == INVALID_SOCKET) {
+    	PrintMsg(L"INVALID_SOCKET");
+        return;
+    }
+
+    // Send Routine
+
+	// Common
+	UnicodeString t_Str = L"";
+	int t_SendSize = 0;
+
+	struct sockaddr_in	t_sockaddr_in;
+	memset(&t_sockaddr_in, 0, sizeof(t_sockaddr_in));
+	t_sockaddr_in.sin_family = AF_INET;
+	//t_sockaddr_in.sin_addr.s_addr = inet_addr(m_ServerIPstr.c_str());
+    //t_sockaddr_in.sin_addr.s_addr = inet_addr("192.168.0.132");
+    t_sockaddr_in.sin_addr.s_addr = inet_addr(LOCAL_IP);
+	t_sockaddr_in.sin_port = htons(14759);
+
+	t_SendSize = sendto(m_sock_MCast, m_SendBuf, 100, 0, (struct sockaddr*)&t_sockaddr_in, sizeof(t_sockaddr_in));
+	t_Str.sprintf(L"[SEND] Size : %04d", t_SendSize);
+	t_Str += L" (Target IP : ";
+	t_Str += L"192.168.0.132";
+	t_Str += L", Port : ";
+	t_Str += L"14759";
+	t_Str += L")";
+	PrintMsg(t_Str);
+
+	//return t_SendSize;
+    return;
+}
+//---------------------------------------------------------------------------
 

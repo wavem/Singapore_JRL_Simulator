@@ -3,8 +3,8 @@ object FormMain: TFormMain
   Top = 0
   BorderIcons = [biSystemMenu, biMinimize]
   Caption = 'JRLP Simulator'
-  ClientHeight = 768
-  ClientWidth = 1024
+  ClientHeight = 925
+  ClientWidth = 1274
   Color = clBtnFace
   DoubleBuffered = True
   Font.Charset = DEFAULT_CHARSET
@@ -20,8 +20,8 @@ object FormMain: TFormMain
   object ___pnBase: TPanel
     Left = 0
     Top = 122
-    Width = 1024
-    Height = 646
+    Width = 1274
+    Height = 803
     Align = alClient
     BevelOuter = bvNone
     Color = 3355443
@@ -33,8 +33,8 @@ object FormMain: TFormMain
     ExplicitHeight = 41
     object memo_Data: TAdvMemo
       Left = 0
-      Top = 545
-      Width = 1024
+      Top = 702
+      Width = 1274
       Height = 101
       Cursor = crIBeam
       ActiveLineSettings.ShowActiveLine = False
@@ -151,12 +151,13 @@ object FormMain: TFormMain
       Version = '3.4.1.0'
       WordWrap = wwNone
       ExplicitTop = 551
+      ExplicitWidth = 1024
     end
     object memo: TAdvMemo
-      Left = 804
+      Left = 592
       Top = 0
-      Width = 220
-      Height = 545
+      Width = 682
+      Height = 702
       Cursor = crIBeam
       ActiveLineSettings.ShowActiveLine = False
       ActiveLineSettings.ShowActiveLineIndicator = False
@@ -269,15 +270,13 @@ object FormMain: TFormMain
       UseStyler = True
       Version = '3.4.1.0'
       WordWrap = wwNone
-      ExplicitTop = -6
     end
     object Notebook_Main: TNotebook
       Left = 0
       Top = 0
-      Width = 804
-      Height = 545
+      Width = 592
+      Height = 702
       Align = alClient
-      PageIndex = 3
       TabOrder = 2
       ExplicitLeft = 248
       ExplicitTop = 176
@@ -292,16 +291,14 @@ object FormMain: TFormMain
         object __pnBase_00_Connection: TPanel
           Left = 0
           Top = 0
-          Width = 804
-          Height = 545
+          Width = 592
+          Height = 702
           Align = alClient
           BevelOuter = bvNone
           Color = 3355443
           ParentBackground = False
           TabOrder = 0
-          ExplicitLeft = 619
-          ExplicitWidth = 545
-          ExplicitHeight = 185
+          ExplicitWidth = 673
         end
       end
       object TPage
@@ -314,8 +311,8 @@ object FormMain: TFormMain
         object __pnBase_01_Protocol: TPanel
           Left = 0
           Top = 0
-          Width = 804
-          Height = 545
+          Width = 592
+          Height = 702
           Align = alClient
           BevelOuter = bvNone
           Color = 3355443
@@ -336,8 +333,8 @@ object FormMain: TFormMain
         object __pnBase_02_Setting: TPanel
           Left = 0
           Top = 0
-          Width = 804
-          Height = 545
+          Width = 592
+          Height = 702
           Align = alClient
           BevelOuter = bvNone
           Color = 3355443
@@ -358,8 +355,8 @@ object FormMain: TFormMain
         object __pnBase_03_Generator: TPanel
           Left = 0
           Top = 0
-          Width = 804
-          Height = 545
+          Width = 592
+          Height = 702
           Align = alClient
           BevelOuter = bvNone
           Color = 3355443
@@ -375,7 +372,7 @@ object FormMain: TFormMain
   object MainRibbonMenu: TdxRibbon
     Left = 0
     Top = 0
-    Width = 1024
+    Width = 1274
     Height = 122
     Cursor = crHandPoint
     BarManager = BarMgr
@@ -383,6 +380,7 @@ object FormMain: TFormMain
     Contexts = <>
     TabOrder = 1
     TabStop = False
+    ExplicitWidth = 1024
     object Menu: TdxRibbonTab
       Active = True
       Caption = 'Menu'
@@ -1017,6 +1015,7 @@ object FormMain: TFormMain
       Category = 0
       Hint = 'Test'
       Visible = ivAlways
+      OnClick = MainBtn_TestClick
       HotGlyph.Data = {
         36100000424D3610000000000000360000002800000020000000200000000100
         2000000000000010000000000000000000000000000000000000000000000000
@@ -1290,5 +1289,9 @@ object FormMain: TFormMain
         0000000000000000000000000000000000000000000000000000}
       Width = 60
     end
+  end
+  object tm_Sender: TTimer
+    Enabled = False
+    Left = 592
   end
 end
