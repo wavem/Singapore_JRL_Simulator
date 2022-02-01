@@ -260,7 +260,6 @@ bool __fastcall TFormMain::CreateMCastSocket() {
 	struct sockaddr_in t_sockaddr_in;
 	memset(&t_sockaddr_in, 0, sizeof(t_sockaddr_in));
 
-
 	// Create Socket
 	m_sock_MCast = socket(AF_INET, SOCK_DGRAM, IPPROTO_IP);
 	if(m_sock_MCast == INVALID_SOCKET) {
@@ -270,12 +269,8 @@ bool __fastcall TFormMain::CreateMCastSocket() {
 
 	// Input Comm Information
 	t_sockaddr_in.sin_family = AF_INET;
-	//t_sockaddr_in.sin_addr.s_addr = inet_addr(m_LocalIPstr.c_str());
-    t_sockaddr_in.sin_addr.s_addr = inet_addr(LOCAL_IP);
-    //t_sockaddr_in.sin_addr.s_addr = htonl(INADDR_ANY);
-	//t_sockaddr_in.sin_port = htons(m_LocalPort);
+    t_sockaddr_in.sin_addr.s_addr = htonl(INADDR_ANY);
     t_sockaddr_in.sin_port = htons(MULTICAST_PORT);
-
 
 	// Set Socket Option : REUSE
 	int t_opt_reuse = 1;
@@ -305,33 +300,16 @@ bool __fastcall TFormMain::CreateMCastSocket() {
 
 	// Join to Multicast Group
     struct ip_mreq t_ip_mreq;
-
-	//t_AnsiStr = (AnsiString)m_MyIP;
 	ZeroMemory(&t_ip_mreq, sizeof(t_ip_mreq));
 	t_ip_mreq.imr_multiaddr.s_addr = inet_addr(MULTICAST_IP);
-	//m_ip_mreq.imr_interface.s_addr = inet_addr(LOCAL_IP);
-	//t_ip_mreq.imr_interface.s_addr = inet_addr(m_LocalIPstr.c_str());
-    t_ip_mreq.imr_interface.s_addr = inet_addr(LOCAL_IP);
+    //t_ip_mreq.imr_interface.s_addr = inet_addr(LOCAL_IP); // LOCAL 넣어주지 않아도 됨.
+    t_ip_mreq.imr_interface.s_addr = htonl(INADDR_ANY);
 	if(setsockopt(m_sock_MCast, IPPROTO_IP, IP_ADD_MEMBERSHIP, (char *) &t_ip_mreq, sizeof(t_ip_mreq)) == SOCKET_ERROR) {
 		PrintMsg(L"Fail to join multicast group");
 		return false;
 	}
 
 	return true;
-
-#if 0
-    // Bind to the proper port number with the IP address
-	ZeroMemory(&m_addr_in, sizeof(m_addr_in));
-	m_addr_in.sin_family = AF_INET;
-	m_addr_in.sin_addr.s_addr = htonl(INADDR_ANY);
-	m_addr_in.sin_port = htons(MULTICAST_PORT);
-	if(bind(m_MCast_socket, (struct sockaddr*)&m_addr_in, sizeof(m_addr_in))) {
-		PrintMsg(L"Fail to bind multicast socket");
-		return false;
-	}
-
-    return true;
-#endif
 }
 //---------------------------------------------------------------------------
 
