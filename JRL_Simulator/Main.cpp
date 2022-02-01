@@ -260,6 +260,14 @@ bool __fastcall TFormMain::CreateMCastSocket() {
 	struct sockaddr_in t_sockaddr_in;
 	memset(&t_sockaddr_in, 0, sizeof(t_sockaddr_in));
 
+
+	// Create Socket
+	m_sock_MCast = socket(AF_INET, SOCK_DGRAM, IPPROTO_IP);
+	if(m_sock_MCast == INVALID_SOCKET) {
+		PrintMsg(L"Fail to create socket");
+		return false;
+	}
+
 	// Input Comm Information
 	t_sockaddr_in.sin_family = AF_INET;
 	//t_sockaddr_in.sin_addr.s_addr = inet_addr(m_LocalIPstr.c_str());
@@ -268,12 +276,6 @@ bool __fastcall TFormMain::CreateMCastSocket() {
 	//t_sockaddr_in.sin_port = htons(m_LocalPort);
     t_sockaddr_in.sin_port = htons(MULTICAST_PORT);
 
-	// Create Socket
-	m_sock_MCast = socket(AF_INET, SOCK_DGRAM, IPPROTO_IP);
-	if(m_sock_MCast == INVALID_SOCKET) {
-		PrintMsg(L"Fail to create socket");
-		return false;
-	}
 
 	// Set Socket Option : REUSE
 	int t_opt_reuse = 1;
