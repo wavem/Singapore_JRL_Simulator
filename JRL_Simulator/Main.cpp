@@ -75,6 +75,8 @@
 #pragma link "dxSkinWhiteprint"
 #pragma link "dxSkinXmas2008Blue"
 #pragma link "AdvMemo"
+#pragma link "AdvEdit"
+#pragma link "AdvGlassButton"
 #pragma resource "*.dfm"
 #pragma link "libxl.lib"
 //#pragma link "Ws2_32.lib"
@@ -109,13 +111,12 @@ void __fastcall TFormMain::InitProgram() {
     Notebook_Main->PageIndex = 0;
 
 	// Init Variables...
+    m_bIsInitComplete = false;
 	m_sock_MCast = INVALID_SOCKET;
 	m_MCastThread = NULL;
-	//m_LocalIPstr = "";
-    m_LocalIPstr = "192.168.0.132";
-	m_ServerIPstr = "";
-	m_ServerPort = 0;
-	m_LocalPort = 0;
+    m_LocalIPstr = "";
+	m_MCastIPstr = "";
+	m_MCastPort = 0;
 	memset(m_SendBuf, 0, MCAST_SEND_BUF_SIZE);
 	memset(m_RecvBuf, 0, MCAST_RECV_BUF_SIZE);
 	//m_SendProtocolSize = 0;
@@ -170,6 +171,7 @@ void __fastcall TFormMain::InitProgram() {
 
 
 
+    m_bIsInitComplete = true;
 	PrintMsg(L"Init Complete");
 }
 //---------------------------------------------------------------------------
@@ -339,6 +341,54 @@ void __fastcall TFormMain::MainBtn_TestClick(TObject *Sender)
 	PrintMsg(t_Str);
 
     return;
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TFormMain::btn_Create_SocketClick(TObject *Sender)
+{
+	// Pre-Return
+	if(m_bIsInitComplete == false) {
+        PrintMsg(L"Program Init Failed...");
+        return;
+    }
+
+    // Extract Network Information
+	ExtractCommInformation();
+
+	// Create Socket
+
+/*
+    if(CreateUDPSocket()) {
+        if(CreateUDPThread() == false) {
+            PrintMsg(L"Fail to Create UDP Thread");
+        } else {
+            Notebook_Main->PageIndex = 1; // Protocol List Page
+        }
+    }*/
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TFormMain::ExtractCommInformation() {
+
+	// Common
+	struct sockaddr_in t_sockaddr_in;
+	memset(&t_sockaddr_in, 0, sizeof(t_sockaddr_in));
+
+	// Extract User Input Information
+	m_MCastPort = (unsigned short)ed_MCast_Port->IntValue;
+
+	t_sockaddr_in.sin_addr.S_un.S_un_b.s_b1 = (BYTE)ed_Local_IP_1->IntValue;
+	t_sockaddr_in.sin_addr.S_un.S_un_b.s_b2 = (BYTE)ed_Local_IP_2->IntValue;
+	t_sockaddr_in.sin_addr.S_un.S_un_b.s_b3 = (BYTE)ed_Local_IP_3->IntValue;
+	t_sockaddr_in.sin_addr.S_un.S_un_b.s_b4 = (BYTE)ed_Local_IP_4->IntValue;
+	m_LocalIPstr = inet_ntoa(t_sockaddr_in.sin_addr);
+
+	t_sockaddr_in.sin_addr.S_un.S_un_b.s_b1 = (BYTE)ed_MCast_IP_1->IntValue;
+	t_sockaddr_in.sin_addr.S_un.S_un_b.s_b2 = (BYTE)ed_MCast_IP_2->IntValue;
+	t_sockaddr_in.sin_addr.S_un.S_un_b.s_b3 = (BYTE)ed_MCast_IP_3->IntValue;
+	t_sockaddr_in.sin_addr.S_un.S_un_b.s_b4 = (BYTE)ed_MCast_IP_4->IntValue;
+	m_MCastIPstr = inet_ntoa(t_sockaddr_in.sin_addr);
 }
 //---------------------------------------------------------------------------
 

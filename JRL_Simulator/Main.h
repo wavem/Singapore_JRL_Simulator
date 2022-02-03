@@ -74,6 +74,8 @@
 #include "dxSkinWhiteprint.hpp"
 #include "dxSkinXmas2008Blue.hpp"
 #include "AdvMemo.hpp"
+#include "AdvEdit.hpp"
+#include "AdvGlassButton.hpp"
 //---------------------------------------------------------------------------
 class CMCastSocketThread;
 class TFormMain : public TForm
@@ -98,13 +100,30 @@ __published:	// IDE-managed Components
 	TPanel *__pnBase_02_Setting;
 	TPanel *__pnBase_03_Generator;
 	TTimer *tm_Sender;
+	TLabel *lb_Title_Local_IP;
+	TLabel *lb_Title_Multicast_IP;
+	TLabel *lb_Title_Multicast_Port;
+	TAdvEdit *ed_MCast_Port;
+	TAdvEdit *ed_MCast_IP_1;
+	TAdvEdit *ed_Local_IP_1;
+	TAdvEdit *ed_Local_IP_2;
+	TAdvEdit *ed_Local_IP_3;
+	TAdvEdit *ed_Local_IP_4;
+	TAdvEdit *ed_MCast_IP_4;
+	TAdvEdit *ed_MCast_IP_3;
+	TAdvEdit *ed_MCast_IP_2;
+	TAdvGlassButton *btn_Create_Socket;
 	void __fastcall MainButtonClick(TObject *Sender);
 	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
 	void __fastcall MainBtn_VersionClick(TObject *Sender);
 	void __fastcall MainBtn_TestClick(TObject *Sender);
+	void __fastcall btn_Create_SocketClick(TObject *Sender);
 private:	// User declarations
 public:		// User declarations
 	__fastcall TFormMain(TComponent* Owner);
+
+public: // Basic Member
+	bool m_bIsInitComplete;
 
 public: // Basic Functions
 	void __fastcall InitProgram();
@@ -116,15 +135,17 @@ public: // Libxl
 	libxl::Book* m_Book;
 	bool __fastcall InitConfigExcelFile();
 
+public: // UI Func
+	void __fastcall ExtractCommInformation();
+
 public: // SOCKET
 	SOCKET m_sock_MCast;
 	bool __fastcall CreateMCastSocket();
 	bool __fastcall CreateMCastThread();
 	CMCastSocketThread* m_MCastThread;
 	AnsiString m_LocalIPstr;
-	AnsiString m_ServerIPstr;
-	unsigned short m_ServerPort;
-	unsigned short m_LocalPort;
+	AnsiString m_MCastIPstr;
+	unsigned short m_MCastPort;
 	BYTE m_SendBuf[1500];
 	BYTE m_RecvBuf[1500];
 	int __fastcall SendPacket();

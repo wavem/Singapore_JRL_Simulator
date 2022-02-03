@@ -8,7 +8,7 @@
 
 // Communication
 #define MULTICAST_PORT	14759
-#define MULTICAST_IP	"239.255.93.18"
+#define MULTICAST_IP	"233.111.111.111"
 #define LOCAL_IP		"192.168.0.132"
 
 // Define Max Data Size
