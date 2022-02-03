@@ -77,6 +77,7 @@
 #pragma link "AdvMemo"
 #pragma resource "*.dfm"
 #pragma link "libxl.lib"
+//#pragma link "Ws2_32.lib"
 TFormMain *FormMain;
 //---------------------------------------------------------------------------
 __fastcall TFormMain::TFormMain(TComponent* Owner)
@@ -258,12 +259,14 @@ bool __fastcall TFormMain::CreateMCastSocket() {
 		return false;
 	}
 
+/*
 	// Set Socket Option : REUSE
 	int t_opt_reuse = 1;
 	if(setsockopt(m_sock_MCast, SOL_SOCKET, SO_REUSEADDR,(char *)&t_opt_reuse, sizeof(t_opt_reuse)) == SOCKET_ERROR) {
 		PrintMsg(L"Fail to set socket option (REUSE)");
 		return false;
 	}
+*/
 
 	// Get Recv Buffer Size
 	int t_recvBufferSize = 0;
@@ -275,29 +278,33 @@ bool __fastcall TFormMain::CreateMCastSocket() {
 		PrintMsg(tempStr);
 	}
 
-/*
+
 	// Setting Multicast TTL
     int ttl = 2;
     if(setsockopt(m_sock_MCast, IPPROTO_IP, IP_MULTICAST_TTL, (char*)&ttl, sizeof(ttl)) == SOCKET_ERROR) {
     	PrintMsg(L"Multicast TTL Option Error");
         return false;
     }
-*/
 
+/*
     // Disable loopback so you do not receive your own datagrams.
     char loopch=0;
     if (setsockopt(m_sock_MCast, IPPROTO_IP, IP_MULTICAST_LOOP, (char *)&loopch, sizeof(loopch)) < 0) {
     	PrintMsg("ERROR : IP_MULTICAST_LOOP:");
         return false;
     }
+*/
+
 
     // Setting NIC
     IN_ADDR t_LocalAddr;
-    t_LocalAddr.s_addr = inet_addr(MULTICAST_IP);
+    //t_LocalAddr.s_addr = inet_addr(MULTICAST_IP);
+    t_LocalAddr.s_addr = inet_addr("192.168.0.174");
     if(setsockopt(m_sock_MCast, IPPROTO_IP, IP_MULTICAST_IF, (char*)&t_LocalAddr, sizeof(t_LocalAddr)) == SOCKET_ERROR) {
     	PrintMsg(L"Multicast Interface Error");
         return false;
     }
+
 
 	return true;
 }

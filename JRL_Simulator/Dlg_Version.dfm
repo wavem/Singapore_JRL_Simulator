@@ -43,11 +43,11 @@ object FormVersion: TFormVersion
       ParentFont = False
     end
     object Label2: TLabel
-      Left = 287
-      Top = 96
-      Width = 110
+      Left = 267
+      Top = 101
+      Width = 130
       Height = 18
-      Caption = 'Version : 0.0.1'
+      Caption = 'Version : 0.14.07'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWhite
       Font.Height = -15
@@ -60,7 +60,7 @@ object FormVersion: TFormVersion
       Top = 125
       Width = 197
       Height = 18
-      Caption = 'Update Date : 2022-01-30'
+      Caption = 'Update Date : 2022-02-02'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWhite
       Font.Height = -15
