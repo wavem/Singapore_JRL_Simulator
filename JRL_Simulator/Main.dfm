@@ -154,9 +154,9 @@ object FormMain: TFormMain
       ExplicitWidth = 1024
     end
     object memo: TAdvMemo
-      Left = 800
+      Left = 528
       Top = 0
-      Width = 474
+      Width = 746
       Height = 702
       Cursor = crIBeam
       ActiveLineSettings.ShowActiveLine = False
@@ -274,7 +274,7 @@ object FormMain: TFormMain
     object Notebook_Main: TNotebook
       Left = 0
       Top = 0
-      Width = 800
+      Width = 528
       Height = 702
       Align = alClient
       TabOrder = 2
@@ -291,7 +291,7 @@ object FormMain: TFormMain
         object __pnBase_00_Connection: TPanel
           Left = 0
           Top = 0
-          Width = 800
+          Width = 528
           Height = 702
           Align = alClient
           BevelOuter = bvNone
@@ -300,6 +300,7 @@ object FormMain: TFormMain
           TabOrder = 0
           ExplicitLeft = -6
           ExplicitTop = -6
+          ExplicitWidth = 800
           object lb_Title_Local_IP: TLabel
             Left = 24
             Top = 30
@@ -374,7 +375,7 @@ object FormMain: TFormMain
             Font.Style = [fsBold]
             MaxLength = 5
             ParentFont = False
-            TabOrder = 0
+            TabOrder = 8
             Text = '14759'
             Visible = True
             Version = '3.3.5.3'
@@ -408,7 +409,7 @@ object FormMain: TFormMain
             Font.Style = [fsBold]
             MaxLength = 3
             ParentFont = False
-            TabOrder = 1
+            TabOrder = 4
             Text = '233'
             Visible = True
             Version = '3.3.5.3'
@@ -442,7 +443,7 @@ object FormMain: TFormMain
             Font.Style = [fsBold]
             MaxLength = 3
             ParentFont = False
-            TabOrder = 2
+            TabOrder = 0
             Text = '192'
             Visible = True
             Version = '3.3.5.3'
@@ -476,7 +477,7 @@ object FormMain: TFormMain
             Font.Style = [fsBold]
             MaxLength = 3
             ParentFont = False
-            TabOrder = 3
+            TabOrder = 1
             Text = '168'
             Visible = True
             Version = '3.3.5.3'
@@ -510,7 +511,7 @@ object FormMain: TFormMain
             Font.Style = [fsBold]
             MaxLength = 3
             ParentFont = False
-            TabOrder = 4
+            TabOrder = 2
             Text = '0'
             Visible = True
             Version = '3.3.5.3'
@@ -544,7 +545,7 @@ object FormMain: TFormMain
             Font.Style = [fsBold]
             MaxLength = 3
             ParentFont = False
-            TabOrder = 5
+            TabOrder = 3
             Text = '174'
             Visible = True
             Version = '3.3.5.3'
@@ -578,7 +579,7 @@ object FormMain: TFormMain
             Font.Style = [fsBold]
             MaxLength = 3
             ParentFont = False
-            TabOrder = 6
+            TabOrder = 7
             Text = '111'
             Visible = True
             Version = '3.3.5.3'
@@ -612,7 +613,7 @@ object FormMain: TFormMain
             Font.Style = [fsBold]
             MaxLength = 3
             ParentFont = False
-            TabOrder = 7
+            TabOrder = 6
             Text = '111'
             Visible = True
             Version = '3.3.5.3'
@@ -646,14 +647,14 @@ object FormMain: TFormMain
             Font.Style = [fsBold]
             MaxLength = 3
             ParentFont = False
-            TabOrder = 8
+            TabOrder = 5
             Text = '111'
             Visible = True
             Version = '3.3.5.3'
           end
           object btn_Create_Socket: TAdvGlassButton
             Left = 130
-            Top = 152
+            Top = 143
             Width = 100
             Height = 32
             Cursor = crHandPoint
@@ -686,7 +687,7 @@ object FormMain: TFormMain
         object __pnBase_01_Protocol: TPanel
           Left = 0
           Top = 0
-          Width = 800
+          Width = 528
           Height = 702
           Align = alClient
           BevelOuter = bvNone
@@ -708,7 +709,7 @@ object FormMain: TFormMain
         object __pnBase_02_Setting: TPanel
           Left = 0
           Top = 0
-          Width = 800
+          Width = 528
           Height = 702
           Align = alClient
           BevelOuter = bvNone
@@ -730,7 +731,7 @@ object FormMain: TFormMain
         object __pnBase_03_Generator: TPanel
           Left = 0
           Top = 0
-          Width = 800
+          Width = 528
           Height = 702
           Align = alClient
           BevelOuter = bvNone

@@ -158,19 +158,6 @@ void __fastcall TFormMain::InitProgram() {
     	PrintMsg(L"Config File Init Complete");
     }
 
-
-    // Create Socket
-    if(CreateMCastSocket() == false) {
-
-    	return;
-    } else {
-        PrintMsg(L"Multicast Socket Complete");
-    }
-
-    // Create Multicast Socket Thread
-
-
-
     m_bIsInitComplete = true;
 	PrintMsg(L"Init Complete");
 }
@@ -280,7 +267,6 @@ bool __fastcall TFormMain::CreateMCastSocket() {
 		PrintMsg(tempStr);
 	}
 
-
 	// Setting Multicast TTL
     int ttl = 2;
     if(setsockopt(m_sock_MCast, IPPROTO_IP, IP_MULTICAST_TTL, (char*)&ttl, sizeof(ttl)) == SOCKET_ERROR) {
@@ -297,16 +283,13 @@ bool __fastcall TFormMain::CreateMCastSocket() {
     }
 */
 
-
     // Setting NIC
     IN_ADDR t_LocalAddr;
-    //t_LocalAddr.s_addr = inet_addr(MULTICAST_IP);
-    t_LocalAddr.s_addr = inet_addr("192.168.0.174");
+    t_LocalAddr.s_addr = inet_addr(m_LocalIPstr.c_str());
     if(setsockopt(m_sock_MCast, IPPROTO_IP, IP_MULTICAST_IF, (char*)&t_LocalAddr, sizeof(t_LocalAddr)) == SOCKET_ERROR) {
     	PrintMsg(L"Multicast Interface Error");
         return false;
     }
-
 
 	return true;
 }
@@ -328,15 +311,15 @@ void __fastcall TFormMain::MainBtn_TestClick(TObject *Sender)
 	struct sockaddr_in	t_sockaddr_in;
 	memset(&t_sockaddr_in, 0, sizeof(t_sockaddr_in));
 	t_sockaddr_in.sin_family = AF_INET;
-    t_sockaddr_in.sin_addr.s_addr = inet_addr(MULTICAST_IP);
-	t_sockaddr_in.sin_port = htons(14759);
+    t_sockaddr_in.sin_addr.s_addr = inet_addr(m_MCastIPstr.c_str());
+	t_sockaddr_in.sin_port = htons(m_MCastPort);
 
 	t_SendSize = sendto(m_sock_MCast, m_SendBuf, 100, 0, (struct sockaddr*)&t_sockaddr_in, sizeof(t_sockaddr_in));
 	t_Str.sprintf(L"[SEND] Size : %04d", t_SendSize);
 	t_Str += L" (Target IP : ";
-	t_Str += L"192.168.0.132";
+	t_Str += m_MCastIPstr;
 	t_Str += L", Port : ";
-	t_Str += L"14759";
+	t_Str += m_MCastPort;
 	t_Str += L")";
 	PrintMsg(t_Str);
 
@@ -355,17 +338,19 @@ void __fastcall TFormMain::btn_Create_SocketClick(TObject *Sender)
     // Extract Network Information
 	ExtractCommInformation();
 
-	// Create Socket
+    // Create Socket
+    if(CreateMCastSocket() == false) {
 
-/*
-    if(CreateUDPSocket()) {
-        if(CreateUDPThread() == false) {
-            PrintMsg(L"Fail to Create UDP Thread");
-        } else {
-            Notebook_Main->PageIndex = 1; // Protocol List Page
-        }
-    }*/
+    	return;
+    } else {
+        PrintMsg(L"Multicast Socket Complete");
+    }
 
+    // Create Multicast Socket Thread
+    // Routine Here
+
+
+    Notebook_Main->PageIndex = 1; // Protocol List Page
 }
 //---------------------------------------------------------------------------
 
