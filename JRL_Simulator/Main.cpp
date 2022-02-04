@@ -168,7 +168,7 @@ bool __fastcall TFormMain::InitConfigExcelFile() {
 	m_Book = xlCreateXMLBook();
     if(m_Book) {
     	m_Book->setKey(L"ÁØÈ£ ¾ç", L"windows-2d20200d03c0ed046aba6867a7n0m2j0");
-        if(m_Book->load(L"Config\\Config.xlsx")) {
+        if(m_Book->load(L"Config\\Config_Simulator.xlsx")) {
             // Load Real-Time Protocol List & Printout on the Grid
             //LoadRealTimeProtocolList();
 

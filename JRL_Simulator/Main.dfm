@@ -27,10 +27,6 @@ object FormMain: TFormMain
     Color = 3355443
     ParentBackground = False
     TabOrder = 0
-    ExplicitLeft = 152
-    ExplicitTop = 144
-    ExplicitWidth = 185
-    ExplicitHeight = 41
     object memo_Data: TAdvMemo
       Left = 0
       Top = 702
@@ -150,8 +146,6 @@ object FormMain: TFormMain
       UseStyler = True
       Version = '3.4.1.0'
       WordWrap = wwNone
-      ExplicitTop = 551
-      ExplicitWidth = 1024
     end
     object memo: TAdvMemo
       Left = 528
@@ -278,16 +272,10 @@ object FormMain: TFormMain
       Height = 702
       Align = alClient
       TabOrder = 2
-      ExplicitLeft = 248
-      ExplicitTop = 176
-      ExplicitWidth = 150
-      ExplicitHeight = 150
       object TPage
         Left = 0
         Top = 0
         Caption = 'Connection'
-        ExplicitWidth = 150
-        ExplicitHeight = 150
         object __pnBase_00_Connection: TPanel
           Left = 0
           Top = 0
@@ -298,9 +286,6 @@ object FormMain: TFormMain
           Color = 3355443
           ParentBackground = False
           TabOrder = 0
-          ExplicitLeft = -6
-          ExplicitTop = -6
-          ExplicitWidth = 800
           object lb_Title_Local_IP: TLabel
             Left = 24
             Top = 30
@@ -756,7 +741,6 @@ object FormMain: TFormMain
     Contexts = <>
     TabOrder = 1
     TabStop = False
-    ExplicitWidth = 1024
     object Menu: TdxRibbonTab
       Active = True
       Caption = 'Menu'
