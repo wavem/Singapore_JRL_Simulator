@@ -26,9 +26,6 @@ object FormVersion: TFormVersion
     Color = 3355443
     ParentBackground = False
     TabOrder = 0
-    ExplicitLeft = 318
-    ExplicitWidth = 337
-    ExplicitHeight = 185
     object Label1: TLabel
       Left = 24
       Top = 24
@@ -43,11 +40,11 @@ object FormVersion: TFormVersion
       ParentFont = False
     end
     object Label2: TLabel
-      Left = 267
+      Left = 287
       Top = 101
-      Width = 130
+      Width = 110
       Height = 18
-      Caption = 'Version : 0.15.54'
+      Caption = 'Version : 0.0.1'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWhite
       Font.Height = -15
@@ -56,11 +53,11 @@ object FormVersion: TFormVersion
       ParentFont = False
     end
     object Label3: TLabel
-      Left = 200
-      Top = 125
-      Width = 197
+      Left = 120
+      Top = 133
+      Width = 277
       Height = 18
-      Caption = 'Update Date : 2022-02-03'
+      Caption = 'Update Date : 2022-02-03  PM 14:51'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWhite
       Font.Height = -15
