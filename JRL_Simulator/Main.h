@@ -113,11 +113,14 @@ __published:	// IDE-managed Components
 	TAdvEdit *ed_MCast_IP_3;
 	TAdvEdit *ed_MCast_IP_2;
 	TAdvGlassButton *btn_Create_Socket;
+	TdxBarLargeButton *MainBtn_Test_2;
 	void __fastcall MainButtonClick(TObject *Sender);
 	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
 	void __fastcall MainBtn_VersionClick(TObject *Sender);
 	void __fastcall MainBtn_TestClick(TObject *Sender);
 	void __fastcall btn_Create_SocketClick(TObject *Sender);
+	void __fastcall tm_SenderTimer(TObject *Sender);
+	void __fastcall MainBtn_Test_2Click(TObject *Sender);
 private:	// User declarations
 public:		// User declarations
 	__fastcall TFormMain(TComponent* Owner);
@@ -146,8 +149,8 @@ public: // SOCKET
 	AnsiString m_LocalIPstr;
 	AnsiString m_MCastIPstr;
 	unsigned short m_MCastPort;
-	BYTE m_SendBuf[1500];
-	BYTE m_RecvBuf[1500];
+	BYTE m_SendBuf[MCAST_SEND_BUF_SIZE];
+	BYTE m_RecvBuf[MCAST_RECV_BUF_SIZE];
 	int __fastcall SendPacket();
 
 

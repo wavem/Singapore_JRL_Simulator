@@ -314,7 +314,7 @@ void __fastcall TFormMain::MainBtn_TestClick(TObject *Sender)
     t_sockaddr_in.sin_addr.s_addr = inet_addr(m_MCastIPstr.c_str());
 	t_sockaddr_in.sin_port = htons(m_MCastPort);
 
-	t_SendSize = sendto(m_sock_MCast, m_SendBuf, 100, 0, (struct sockaddr*)&t_sockaddr_in, sizeof(t_sockaddr_in));
+	t_SendSize = sendto(m_sock_MCast, m_SendBuf, MCAST_SEND_BUF_SIZE, 0, (struct sockaddr*)&t_sockaddr_in, sizeof(t_sockaddr_in));
 	t_Str.sprintf(L"[SEND] Size : %04d", t_SendSize);
 	t_Str += L" (Target IP : ";
 	t_Str += m_MCastIPstr;
@@ -374,6 +374,58 @@ void __fastcall TFormMain::ExtractCommInformation() {
 	t_sockaddr_in.sin_addr.S_un.S_un_b.s_b3 = (BYTE)ed_MCast_IP_3->IntValue;
 	t_sockaddr_in.sin_addr.S_un.S_un_b.s_b4 = (BYTE)ed_MCast_IP_4->IntValue;
 	m_MCastIPstr = inet_ntoa(t_sockaddr_in.sin_addr);
+}
+//---------------------------------------------------------------------------
+
+int __fastcall TFormMain::SendPacket() {
+
+	// Pre-Return
+    if(m_sock_MCast == INVALID_SOCKET) {
+    	PrintMsg(L"INVALID_SOCKET");
+        return -1;
+    }
+
+	// Common
+	UnicodeString t_Str = L"";
+	int t_SendSize = 0;
+
+    // Send Routine
+	struct sockaddr_in	t_sockaddr_in;
+	memset(&t_sockaddr_in, 0, sizeof(t_sockaddr_in));
+	t_sockaddr_in.sin_family = AF_INET;
+    t_sockaddr_in.sin_addr.s_addr = inet_addr(m_MCastIPstr.c_str());
+	t_sockaddr_in.sin_port = htons(m_MCastPort);
+
+	t_SendSize = sendto(m_sock_MCast, m_SendBuf, MCAST_SEND_BUF_SIZE, 0, (struct sockaddr*)&t_sockaddr_in, sizeof(t_sockaddr_in));
+	t_Str.sprintf(L"[SEND] Size : %04d", t_SendSize);
+	t_Str += L" (Target IP : ";
+	t_Str += m_MCastIPstr;
+	t_Str += L", Port : ";
+	t_Str += m_MCastPort;
+	t_Str += L")";
+	PrintMsg(t_Str);
+
+    return t_SendSize;
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TFormMain::tm_SenderTimer(TObject *Sender)
+{
+	// Pre-Return & Disabled This Timer
+    if(m_sock_MCast == INVALID_SOCKET) {
+    	PrintMsg(L"INVALID_SOCKET");
+        TTimer *p_Timer = (TTimer*)Sender;
+        p_Timer->Enabled = false;
+        return;
+    }
+
+    SendPacket();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TFormMain::MainBtn_Test_2Click(TObject *Sender)
+{
+	tm_Sender->Enabled = !tm_Sender->Enabled;
 }
 //---------------------------------------------------------------------------
 

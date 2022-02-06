@@ -12,7 +12,7 @@
 #define LOCAL_IP		"192.168.0.132"
 
 // Define Max Data Size
-#define MCAST_SEND_BUF_SIZE		1500
+#define MCAST_SEND_BUF_SIZE		4096
 #define MCAST_RECV_BUF_SIZE		1500
 
 
