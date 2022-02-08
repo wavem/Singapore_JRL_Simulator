@@ -153,6 +153,10 @@ public: // SOCKET
 	BYTE m_RecvBuf[MCAST_RECV_BUF_SIZE];
 	int __fastcall SendPacket();
 
+public: // libxl
+	bool __fastcall LoadRealTimeProtocolList();
+    bool __fastcall LoadSendBufferInto();
+
 
 
 

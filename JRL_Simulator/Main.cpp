@@ -131,6 +131,14 @@ void __fastcall TFormMain::InitProgram() {
     // Init Grids
 
 
+
+    // Config File Init Routine
+	if(InitConfigExcelFile() == false) {
+    	return;
+    } else {
+    	PrintMsg(L"Config File Init Complete");
+    }
+
     // Socket Init
     WSADATA data;
 	WORD version;
@@ -151,13 +159,6 @@ void __fastcall TFormMain::InitProgram() {
 		PrintMsg(L"Socket init success");
 	}
 
-    // Config File Init Routine
-	if(InitConfigExcelFile() == false) {
-    	return;
-    } else {
-    	PrintMsg(L"Config File Init Complete");
-    }
-
     m_bIsInitComplete = true;
 	PrintMsg(L"Init Complete");
 }
@@ -170,9 +171,18 @@ bool __fastcall TFormMain::InitConfigExcelFile() {
     	m_Book->setKey(L"ÁØÈ£ ¾ç", L"windows-2d20200d03c0ed046aba6867a7n0m2j0");
         if(m_Book->load(L"Config\\Config_Simulator.xlsx")) {
             // Load Real-Time Protocol List & Printout on the Grid
-            //LoadRealTimeProtocolList();
+            if(LoadRealTimeProtocolList()) {
+            	PrintMsg(L"Protocol List Init Complete");
+            } else {
+            	return false;
+            }
 
-            PrintMsg(L"Load Complete");
+            // Load Send Buffer Information
+            if(LoadSendBufferInto()) {
+            	PrintMsg(L"Send Buffer Init Complete");
+            } else {
+            	return false;
+            }
 		} else {
 			PrintMsg(L"Fail to Load Excel File");
             return false;
@@ -181,6 +191,24 @@ bool __fastcall TFormMain::InitConfigExcelFile() {
     	PrintMsg(L"Fail to Create XML BOOK");
         return false;
     }
+
+	return true;
+}
+//---------------------------------------------------------------------------
+
+bool __fastcall TFormMain::LoadRealTimeProtocolList() {
+
+
+
+
+	return true;
+}
+//---------------------------------------------------------------------------
+
+bool __fastcall TFormMain::LoadSendBufferInto() {
+
+
+
 
 	return true;
 }
