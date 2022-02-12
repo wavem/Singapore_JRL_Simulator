@@ -76,6 +76,10 @@
 #include "AdvMemo.hpp"
 #include "AdvEdit.hpp"
 #include "AdvGlassButton.hpp"
+#include "AdvGrid.hpp"
+#include "AdvObj.hpp"
+#include "BaseGrid.hpp"
+#include <Vcl.Grids.hpp>
 //---------------------------------------------------------------------------
 class CMCastSocketThread;
 class TFormMain : public TForm
@@ -114,6 +118,7 @@ __published:	// IDE-managed Components
 	TAdvEdit *ed_MCast_IP_2;
 	TAdvGlassButton *btn_Create_Socket;
 	TdxBarLargeButton *MainBtn_Test_2;
+	TAdvStringGrid *grid_SignalList;
 	void __fastcall MainButtonClick(TObject *Sender);
 	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
 	void __fastcall MainBtn_VersionClick(TObject *Sender);

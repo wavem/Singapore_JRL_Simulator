@@ -77,6 +77,9 @@
 #pragma link "AdvMemo"
 #pragma link "AdvEdit"
 #pragma link "AdvGlassButton"
+#pragma link "AdvGrid"
+#pragma link "AdvObj"
+#pragma link "BaseGrid"
 #pragma resource "*.dfm"
 #pragma link "libxl.lib"
 //#pragma link "Ws2_32.lib"
@@ -198,8 +201,38 @@ bool __fastcall TFormMain::InitConfigExcelFile() {
 
 bool __fastcall TFormMain::LoadRealTimeProtocolList() {
 
+	// Common
+    UnicodeString tempStr = L"";
+    libxl::Sheet* t_sheet = NULL;
+    int t_row = 4; // USER DEFINE
+    int t_col = 1; // USER DEFINE
+    int t_LastRow = 0;
+    int t_RowLimit = 0;
 
+    // Clear Routine
+    grid_SignalList->ClearNormalCells();
 
+    // Get Sheet
+    t_sheet = getSheetByName(m_Book, L"RT_Protocol_List");
+    t_LastRow = t_sheet->lastFilledRow();
+    t_RowLimit = t_LastRow - t_row;
+
+    // Read Contents from the Sheet
+    if(t_sheet) {
+    	for(int i = 0 ; i < t_RowLimit ; i++) {
+        	for(int j = 0 ; j < 3 ; j++) {
+            	tempStr = getCellValue(t_sheet, t_row, t_col);
+                grid_SignalList->Cells[j][i + 1] = tempStr;
+                t_col++;
+            }
+            t_row++;
+            t_col = 1; // USER DEFINE
+        }
+
+    } else {
+    	PrintMsg(L"Fail to load RT_Protocol_List sheet");
+		return false;
+    }
 
 	return true;
 }
