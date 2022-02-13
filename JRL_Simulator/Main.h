@@ -95,7 +95,6 @@ __published:	// IDE-managed Components
 	TdxBarLargeButton *MainBtn_Setting;
 	TdxBarLargeButton *MainBtn_Version;
 	TdxBarLargeButton *MainBtn_Test;
-	TAdvMemo *memo_Data;
 	TAdvMemo *memo;
 	TNotebook *Notebook_Main;
 	TPanel *__pnBase_00_Connection;
@@ -137,7 +136,6 @@ public: // Basic Functions
 	void __fastcall InitProgram();
     void __fastcall ExitProgram();
     void __fastcall PrintMsg(UnicodeString _str);
-    void __fastcall PrintData(UnicodeString _str);
 
 public: // Libxl
 	libxl::Book* m_Book;

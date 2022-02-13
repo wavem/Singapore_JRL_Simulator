@@ -253,12 +253,6 @@ void __fastcall TFormMain::PrintMsg(UnicodeString _str) {
 }
 //---------------------------------------------------------------------------
 
-void __fastcall TFormMain::PrintData(UnicodeString _str) {
-	int t_Line = memo_Data->Lines->Add(_str);
-	memo_Data->SetCursor(0, t_Line);
-}
-//---------------------------------------------------------------------------
-
 void __fastcall TFormMain::MainButtonClick(TObject *Sender)
 {
 	TdxBarLargeButton* p_Btn = (TdxBarLargeButton*)Sender;
