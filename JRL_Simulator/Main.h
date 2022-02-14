@@ -131,6 +131,13 @@ __published:	// IDE-managed Components
 	void __fastcall grid_SignalListClickCell(TObject *Sender, int ARow, int ACol);
 	void __fastcall grid_ProtocolGetAlignment(TObject *Sender, int ARow, int ACol, TAlignment &HAlign,
           TVAlignment &VAlign);
+	void __fastcall grid_ProtocolClickCell(TObject *Sender, int ARow, int ACol);
+	void __fastcall grid_ProtocolDblClickCell(TObject *Sender, int ARow, int ACol);
+	void __fastcall grid_ProtocolMouseMove(TObject *Sender, TShiftState Shift, int X,
+          int Y);
+	void __fastcall grid_ProtocolRightClickCell(TObject *Sender, int ARow, int ACol);
+
+
 private:	// User declarations
 public:		// User declarations
 	__fastcall TFormMain(TComponent* Owner);
@@ -173,6 +180,13 @@ public: // Real Time Protocol
     bool __fastcall LoadSendBufferOffset();
     int m_RTimeByteOffset;
     int m_RtimeByteSize;
+    int m_ClickedRow;
+	int m_ClickedCol;
+    int m_ClickedX;
+	int m_ClickedY;
+    void __fastcall ToggleBufferData(TAdvStringGrid* _pGrid, int _Row, int _Col);
+    void __fastcall DisplayBufferDataIntoGrid(int _type);
+    UnicodeString ExtractOriginSignalName(UnicodeString _str);
 
 
 

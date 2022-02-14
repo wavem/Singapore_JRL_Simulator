@@ -16,6 +16,11 @@
 #define MCAST_RECV_BUF_SIZE		1500
 
 
+// Grid Color
+#define COLOR_GRID_SIGNAL_OFF	0x3C3C3C
+#define COLOR_GRID_SIGNAL_ON    0x207DBB
+
+
 // Define Message Code
 #define MSG_LOG_FROM_THREAD		0
 

@@ -13,9 +13,9 @@ class TFormVersion : public TForm
 {
 __published:	// IDE-managed Components
 	TPanel *Panel1;
-	TLabel *Label1;
-	TLabel *Label2;
-	TLabel *Label3;
+	TLabel *lb_ProgramName;
+	TLabel *lb_Version;
+	TLabel *lb_UpdateDate;
 private:	// User declarations
 public:		// User declarations
 	__fastcall TFormVersion(TComponent* Owner);

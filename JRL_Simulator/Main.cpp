@@ -127,6 +127,11 @@ void __fastcall TFormMain::InitProgram() {
     m_RTimeSelectedDevice = L"";
     m_RTimeByteOffset = 0;
     m_RtimeByteSize = 0;
+
+    m_ClickedRow = 0;
+	m_ClickedCol = 0;
+    m_ClickedX = 0;
+	m_ClickedY = 0;
 	//m_SendProtocolSize = 0;
 	//m_RecvProtocolSize = 0;
 	//m_bIsBigEndian = false;
@@ -538,6 +543,8 @@ void __fastcall TFormMain::grid_SignalListClickCell(TObject *Sender, int ARow, i
 
     // Test Code (Random Generation)
 	//SetRandomValueIntoProtocolGrid();
+
+    DisplayBufferDataIntoGrid(0);
 }
 //---------------------------------------------------------------------------
 
@@ -684,4 +691,475 @@ bool __fastcall TFormMain::LoadSendBufferOffset() {
     return false;
 }
 //---------------------------------------------------------------------------
+
+void __fastcall TFormMain::grid_ProtocolClickCell(TObject *Sender, int ARow, int ACol)
+{
+	m_ClickedRow = ARow;
+	m_ClickedCol = ACol;
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TFormMain::grid_ProtocolDblClickCell(TObject *Sender, int ARow, int ACol)
+{
+#if 0
+	// Pre-Return
+	if(ARow == 0 || ACol == 0) return;
+
+	// Common
+	TAdvStringGrid* p_grid = (TAdvStringGrid*)Sender;
+	int t_Tag = p_grid->Tag;
+	int t_Row = m_ClickedRow;
+	int t_Col = m_ClickedCol;
+	BYTE* t_pBuffer = NULL;
+
+	// If the cell is not merged : return
+	if(p_grid->IsMergedCell(t_Col, t_Row) == false) return;
+
+	// Routine Here...
+
+	// Determine Send or Recv Protocol
+	if(t_Tag == SEND_PROTOCOL_TYPE) {
+		t_pBuffer = m_SendBuf;
+	} else if(t_Tag == RECV_PROTOCOL_TYPE) {
+		t_pBuffer = m_RecvBuf;
+	} else return;
+
+	// Cell Merge Variables
+	TPoint t_point;
+	int t_Span_X = 0;
+	int t_Span_Y = 0;
+
+	t_point = p_grid->CellSpan(t_Col, t_Row);
+	t_Span_X = t_point.x;
+	t_Span_Y = t_point.y;
+
+	// Create Data Input Dialog
+	TFormDataInputEdit* p_dlg = new TFormDataInputEdit(t_pBuffer, t_Row - 1, t_Span_Y + 1, 8 - t_Col, t_Span_X + 1, t_Tag);
+	p_dlg->ShowModal();
+	delete p_dlg;
+
+	DisplayBufferDataIntoGrid(t_Tag);
+#endif
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TFormMain::grid_ProtocolMouseMove(TObject *Sender, TShiftState Shift,
+          int X, int Y)
+{
+	m_ClickedX = X;
+	m_ClickedY = Y;
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TFormMain::grid_ProtocolRightClickCell(TObject *Sender, int ARow,
+          int ACol)
+{
+	// Pre Return
+	if(ARow <= 0 || ACol <= 0) return;
+
+	// Common
+	TAdvStringGrid* p_grid = (TAdvStringGrid*)Sender;
+	int t_Tag = p_grid->Tag;
+	DWORD t_dword = 0; // Parameter For Func : SendMessage().
+	WORD t_Lword = m_ClickedX; // X
+	WORD t_Hword = m_ClickedY; // Y
+	t_dword = t_Hword;
+	t_dword = (t_dword << 16) | t_Lword;
+	SendMessage(p_grid->Handle, WM_LBUTTONDOWN, MK_LBUTTON, t_dword);
+
+	// HB Test Routine Start
+	//if(m_bProtocolGridCtrlKeyDown) {
+	//	CheckandRunORStopHB(m_ClickedRow, m_ClickedCol);
+	//	return;
+	//}
+	// HB Test Routine END
+
+	// Real Processing...
+	DWORD t_Option = 0;
+
+	// Declare & Init Variables
+	//bool t_bTurnOn = false;
+	//if(p_grid->Colors[m_ClickedCol][m_ClickedRow] == clLime) {
+	//	t_bTurnOn = false;
+	//} else {
+	//	t_bTurnOn = true;
+	//}
+
+	//DoTestDeviceProtocol(p_grid, m_ClickedRow, m_ClickedCol, t_bTurnOn, t_Option);
+	SendMessage(p_grid->Handle, WM_LBUTTONUP, MK_LBUTTON, t_dword); // Release Mouse Clicked Status (2019-05-13 mjw)
+	ToggleBufferData(p_grid, m_ClickedRow, m_ClickedCol);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TFormMain::ToggleBufferData(TAdvStringGrid* _pGrid, int _Row, int _Col) {
+
+	// Common
+	UnicodeString tempStr = L"";
+	TAdvStringGrid* p_grid = _pGrid;
+	int t_Tag = p_grid->Tag;
+	int t_DataSize = 0;
+	BYTE* t_pBuffer = NULL;
+	BYTE t_Byte = 0;
+
+	// Cell Merge Variables
+	TPoint t_point;
+	int t_Span_X = 0;
+	int t_Span_Y = 0;
+
+	//if(t_Tag == SEND_PROTOCOL_TYPE) {
+	//	t_DataSize = m_SendProtocolSize;
+		t_pBuffer = (m_SendBuf + m_RTimeByteOffset);
+	//} else if(t_Tag == RECV_PROTOCOL_TYPE) {
+	//	t_DataSize = m_RecvProtocolSize;
+	//	t_pBuffer = m_RecvBuf;
+	//}
+
+	// Check Merge
+	if(p_grid->IsMergedCell(_Col, _Row)) {
+		t_point = p_grid->CellSpan(_Col, _Row);
+		t_Span_X = t_point.x;
+		t_Span_Y = t_point.y;
+
+		if(t_Span_Y >0) { // More than 1 Byte Merge
+			switch(t_Span_Y) {
+				case 1: // 2 BTYE
+					if(t_pBuffer[_Row - 1] == 0 && t_pBuffer[_Row - 1 + 1] == 0) {
+						memset(&(t_pBuffer[_Row - 1]), 0xFF, 2);
+					} else {
+						memset(&(t_pBuffer[_Row - 1]), 0x00, 2);
+					}
+					break;
+
+				case 3: // 4 BYTE
+					if(t_pBuffer[_Row - 1] == 0 && t_pBuffer[_Row - 1 + 1] == 0 && t_pBuffer[_Row - 1 + 2] == 0 && t_pBuffer[_Row - 1 + 3] == 0) {
+						memset(&(t_pBuffer[_Row - 1]), 0xFF, 4);
+					} else {
+						memset(&(t_pBuffer[_Row - 1]), 0x00, 4);
+					}
+					break;
+
+				default:
+					break;
+			}
+		} else {
+			switch(t_Span_X) {
+				default:
+					break;
+
+				case 7: // 8 Bit (1 BYTE)
+					if(t_pBuffer[_Row - 1] == 0) {
+						t_pBuffer[_Row - 1] = 0xFF;
+					} else {
+						t_pBuffer[_Row - 1] = 0x00;
+					}
+					break;
+
+				case 6: // 7 Bit
+					t_Byte = (t_pBuffer[_Row - 1] & (0x7F << (2 - _Col)));
+					if(t_Byte == 0) {
+						t_pBuffer[_Row - 1] |= (0x7F << (2 - _Col));
+					} else {
+						t_pBuffer[_Row - 1] &= ~(0x7F << (2 - _Col));
+					}
+					break;
+
+				case 5: // 6 Bit
+					t_Byte = (t_pBuffer[_Row - 1] & (0x3F << (3 - _Col)));
+					if(t_Byte == 0) {
+						t_pBuffer[_Row - 1] |= (0x3F << (3 - _Col));
+					} else {
+						t_pBuffer[_Row - 1] &= ~(0x3F << (3 - _Col));
+					}
+					break;
+
+				case 4: // 5 Bit
+					t_Byte = (t_pBuffer[_Row - 1] & (0x1F << (4 - _Col)));
+					if(t_Byte == 0) {
+						t_pBuffer[_Row - 1] |= (0x1F << (4 - _Col));
+					} else {
+						t_pBuffer[_Row - 1] &= ~(0x1F << (4 - _Col));
+					}
+					break;
+
+				case 3: // 4 Bit
+					t_Byte = (t_pBuffer[_Row - 1] & (0x0F << (5 - _Col)));
+					if(t_Byte == 0) {
+						t_pBuffer[_Row - 1] |= (0x0F << (5 - _Col));
+					} else {
+						t_pBuffer[_Row - 1] &= ~(0x0F << (5 - _Col));
+					}
+					break;
+
+				case 2: // 3 Bit
+					t_Byte = (t_pBuffer[_Row - 1] & (0x07 << (6 - _Col)));
+					if(t_Byte == 0) {
+						t_pBuffer[_Row - 1] |= (0x07 << (6 - _Col));
+					} else {
+						t_pBuffer[_Row - 1] &= ~(0x07 << (6 - _Col));
+					}
+					break;
+
+				case 1: // 2 Bit
+					t_Byte = (t_pBuffer[_Row - 1] & (0x03 << (7 - _Col)));
+					if(t_Byte == 0) {
+						t_pBuffer[_Row - 1] |= (0x03 << (7 - _Col));
+					} else {
+						t_pBuffer[_Row - 1] &= ~(0x03 << (7 - _Col));
+					}
+					break;
+			}
+		}
+	} else {
+		t_pBuffer[_Row - 1] = _BitToggle(t_pBuffer[_Row - 1], 8 - _Col);
+	}
+
+	// Display Routine
+	DisplayBufferDataIntoGrid(t_Tag);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TFormMain::DisplayBufferDataIntoGrid(int _type) {
+
+	// Common
+	UnicodeString tempStr = L"";
+	UnicodeString t_FinalStr = L"";
+	TAdvStringGrid* p_grid = NULL;
+	int t_DataSize = 0;
+	int t_GridRow = 1;
+	int t_GridCol = 1;
+	BYTE* t_pBuffer = NULL;
+	BYTE t_Byte = 0;
+
+	// Cell Merge Variables
+	TPoint t_point;
+	int t_Span_X = 0;
+	int t_Span_Y = 0;
+
+    p_grid = grid_Protocol;
+    t_DataSize = m_RtimeByteSize;
+    t_pBuffer = (m_SendBuf + m_RTimeByteOffset);
+
+    /*
+	if(_type == SEND_PROTOCOL_TYPE) {
+		p_grid = grid_Protocol_Send;
+		t_DataSize = m_SendProtocolSize;
+		t_pBuffer = m_SendBuf;
+	} else if(_type == RECV_PROTOCOL_TYPE) {
+		p_grid = grid_Protocol_Recv;
+		t_DataSize = m_RecvProtocolSize;
+		t_pBuffer = m_RecvBuf;
+	}
+    */
+
+	// Memory Allocate
+	BYTE* t_Buffer = new BYTE[t_DataSize];
+	memcpy(t_Buffer, t_pBuffer, t_DataSize);
+
+	while(t_GridRow <= t_DataSize) {
+		// Check Cell is Merged
+		if(p_grid->IsMergedCell(t_GridCol, t_GridRow)) {
+			t_point = p_grid->CellSpan(t_GridCol, t_GridRow);
+			t_Span_X = t_point.x;
+			t_Span_Y = t_point.y;
+
+			if(t_Span_Y > 0) { // More than 1 Byte Merge
+				switch(t_Span_Y) {
+					case 1: // 2 BTYE
+						// Color Setting
+						if(t_Buffer[t_GridRow - 1] == 0 && t_Buffer[t_GridRow - 1 + 1] == 0) {
+							p_grid->Colors[t_GridCol][t_GridRow] = COLOR_GRID_SIGNAL_OFF;
+						} else {
+							p_grid->Colors[t_GridCol][t_GridRow] = COLOR_GRID_SIGNAL_ON;
+						}
+
+						// Value Setting
+						t_FinalStr = ExtractOriginSignalName(p_grid->Cells[t_GridCol][t_GridRow]);
+
+						//if(m_bIsSigned) {
+							tempStr.sprintf(L"\n%02X%02X", t_Buffer[t_GridRow - 1], t_Buffer[t_GridRow + 1 - 1]);
+						//} else {
+						//	tempStr.sprintf(L"\n%02X%02X", t_Buffer[t_GridRow - 1], t_Buffer[t_GridRow + 1 - 1]);
+						//}
+						t_FinalStr += tempStr;
+						p_grid->Cells[t_GridCol][t_GridRow] = t_FinalStr;
+						t_GridRow += 2;
+						continue;
+						break;
+
+					case 3:
+						// Color Setting
+						if(t_Buffer[t_GridRow - 1] == 0 && t_Buffer[t_GridRow - 1 + 1] == 0 && t_Buffer[t_GridRow - 1 + 2] == 0 && t_Buffer[t_GridRow - 1 + 3] == 0) {
+							p_grid->Colors[t_GridCol][t_GridRow] = COLOR_GRID_SIGNAL_OFF;
+						} else {
+							p_grid->Colors[t_GridCol][t_GridRow] = COLOR_GRID_SIGNAL_ON;
+						}
+
+						// Value Setting
+						t_FinalStr = ExtractOriginSignalName(p_grid->Cells[t_GridCol][t_GridRow]);
+						tempStr.sprintf(L"\n%02X%02X %02X%02X", t_Buffer[t_GridRow - 1], t_Buffer[t_GridRow - 1 + 1], t_Buffer[t_GridRow - 1 + 2], t_Buffer[t_GridRow - 1 + 3]);
+						t_FinalStr += tempStr;
+						p_grid->Cells[t_GridCol][t_GridRow] = t_FinalStr;
+						t_GridRow += 4;
+						continue;
+						break;
+
+					default:
+						break;
+				}
+			} else { // Less than 1 Byte Merge
+				switch(t_Span_X) {
+					default:
+						break;
+
+					case 7: // (8 Bit : 1 Byte)
+						// Color Setting
+						if(t_Buffer[t_GridRow - 1] == 0) {
+							p_grid->Colors[t_GridCol][t_GridRow] = COLOR_GRID_SIGNAL_OFF;
+						} else {
+							p_grid->Colors[t_GridCol][t_GridRow] = COLOR_GRID_SIGNAL_ON;
+						}
+
+						// Value Setting
+						t_FinalStr = ExtractOriginSignalName(p_grid->Cells[t_GridCol][t_GridRow]);
+						tempStr.sprintf(L"\n%02X", t_Buffer[t_GridRow - 1]);
+						t_FinalStr += tempStr;
+						p_grid->Cells[t_GridCol][t_GridRow] = t_FinalStr;
+						t_GridRow++;
+						continue;
+						break;
+
+					case 6: // 7 Bit
+						// Color Setting
+						t_Byte = ((t_Buffer[t_GridRow - 1] >> (2 - t_GridCol)) & 0x7F);
+						if(t_Byte == 0) {
+							p_grid->Colors[t_GridCol][t_GridRow] = COLOR_GRID_SIGNAL_OFF;
+						} else {
+							p_grid->Colors[t_GridCol][t_GridRow] = COLOR_GRID_SIGNAL_ON;
+						}
+
+						// Value Setting
+						t_FinalStr = ExtractOriginSignalName(p_grid->Cells[t_GridCol][t_GridRow]);
+						tempStr.sprintf(L"\n%02X", t_Byte);
+						t_FinalStr += tempStr;
+						p_grid->Cells[t_GridCol][t_GridRow] = t_FinalStr;
+						t_GridCol += 6;
+						break;
+
+					case 5: // 6 Bit
+						// Color Setting
+						t_Byte = ((t_Buffer[t_GridRow - 1] >> (3 - t_GridCol)) & 0x3F);
+						if(t_Byte == 0) {
+							p_grid->Colors[t_GridCol][t_GridRow] = COLOR_GRID_SIGNAL_OFF;
+						} else {
+							p_grid->Colors[t_GridCol][t_GridRow] = COLOR_GRID_SIGNAL_ON;
+						}
+
+						// Value Setting
+						t_FinalStr = ExtractOriginSignalName(p_grid->Cells[t_GridCol][t_GridRow]);
+						tempStr.sprintf(L"\n%02X", t_Byte);
+						t_FinalStr += tempStr;
+						p_grid->Cells[t_GridCol][t_GridRow] = t_FinalStr;
+						t_GridCol += 5;
+						break;
+
+					case 4: // 5 Bit
+						// Color Setting
+						t_Byte = ((t_Buffer[t_GridRow - 1] >> (4 - t_GridCol)) & 0x1F);
+						if(t_Byte == 0) {
+							p_grid->Colors[t_GridCol][t_GridRow] = COLOR_GRID_SIGNAL_OFF;
+						} else {
+							p_grid->Colors[t_GridCol][t_GridRow] = COLOR_GRID_SIGNAL_ON;
+						}
+
+						// Value Setting
+						t_FinalStr = ExtractOriginSignalName(p_grid->Cells[t_GridCol][t_GridRow]);
+						tempStr.sprintf(L"\n%02X", t_Byte);
+						t_FinalStr += tempStr;
+						p_grid->Cells[t_GridCol][t_GridRow] = t_FinalStr;
+						t_GridCol += 4;
+						break;
+
+					case 3: // 4 Bit
+						// Color Setting
+						t_Byte = ((t_Buffer[t_GridRow - 1] >> (5 - t_GridCol)) & 0x0F);
+						if(t_Byte == 0) {
+							p_grid->Colors[t_GridCol][t_GridRow] = COLOR_GRID_SIGNAL_OFF;
+						} else {
+							p_grid->Colors[t_GridCol][t_GridRow] = COLOR_GRID_SIGNAL_ON;
+						}
+
+						// Value Setting
+						t_FinalStr = ExtractOriginSignalName(p_grid->Cells[t_GridCol][t_GridRow]);
+						tempStr.sprintf(L"\n%X", t_Byte);
+						t_FinalStr += tempStr;
+						p_grid->Cells[t_GridCol][t_GridRow] = t_FinalStr;
+						t_GridCol += 3;
+						break;
+
+					case 2: // 3 Bit
+						// Color Setting
+						t_Byte = ((t_Buffer[t_GridRow - 1] >> (6 - t_GridCol)) & 0x07);
+						if(t_Byte == 0) {
+							p_grid->Colors[t_GridCol][t_GridRow] = COLOR_GRID_SIGNAL_OFF;
+						} else {
+							p_grid->Colors[t_GridCol][t_GridRow] = COLOR_GRID_SIGNAL_ON;
+						}
+
+						// Value Setting
+						t_FinalStr = ExtractOriginSignalName(p_grid->Cells[t_GridCol][t_GridRow]);
+						tempStr.sprintf(L"\n%X", t_Byte);
+						t_FinalStr += tempStr;
+						p_grid->Cells[t_GridCol][t_GridRow] = t_FinalStr;
+						t_GridCol += 2;
+						break;
+
+					case 1: // 2 Bit
+						// Color Setting
+						t_Byte = ((t_Buffer[t_GridRow - 1] >> (7 - t_GridCol)) & 0x03);
+						if(t_Byte == 0) {
+							p_grid->Colors[t_GridCol][t_GridRow] = COLOR_GRID_SIGNAL_OFF;
+						} else {
+							p_grid->Colors[t_GridCol][t_GridRow] = COLOR_GRID_SIGNAL_ON;
+						}
+
+						// Value Setting
+						t_FinalStr = ExtractOriginSignalName(p_grid->Cells[t_GridCol][t_GridRow]);
+						tempStr.sprintf(L"\n%X", t_Byte);
+						t_FinalStr += tempStr;
+						p_grid->Cells[t_GridCol][t_GridRow] = t_FinalStr;
+						t_GridCol += 1;
+						break;
+				}
+			}
+		} else {
+			if(_BitCheck(t_Buffer[t_GridRow - 1], 8 - t_GridCol)) {
+				p_grid->Colors[t_GridCol][t_GridRow] = COLOR_GRID_SIGNAL_ON;
+			} else {
+				p_grid->Colors[t_GridCol][t_GridRow] = COLOR_GRID_SIGNAL_OFF;
+			}
+		}
+
+		if(++t_GridCol >= 9) {
+			t_GridCol = 1;
+			t_GridRow++;
+		}
+	}
+
+	// Release Allocated Memory
+	delete t_Buffer;
+}
+//---------------------------------------------------------------------------
+
+UnicodeString TFormMain::ExtractOriginSignalName(UnicodeString _str) {
+	UnicodeString t_FinalStr = _str;
+	for(int i = 0 ; i < _str.Length() ; i++) {
+		if(_str.IsDelimiter(L"\n", i)) {
+			t_FinalStr = _str.SubString(0, i - 1);
+			break;
+		}
+	}
+	return t_FinalStr;
+}
+//---------------------------------------------------------------------------
+
 

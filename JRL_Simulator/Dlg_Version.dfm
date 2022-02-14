@@ -26,7 +26,7 @@ object FormVersion: TFormVersion
     Color = 3355443
     ParentBackground = False
     TabOrder = 0
-    object Label1: TLabel
+    object lb_ProgramName: TLabel
       Left = 24
       Top = 24
       Width = 293
@@ -39,7 +39,7 @@ object FormVersion: TFormVersion
       Font.Style = [fsBold]
       ParentFont = False
     end
-    object Label2: TLabel
+    object lb_Version: TLabel
       Left = 287
       Top = 101
       Width = 110
@@ -52,12 +52,12 @@ object FormVersion: TFormVersion
       Font.Style = [fsBold]
       ParentFont = False
     end
-    object Label3: TLabel
+    object lb_UpdateDate: TLabel
       Left = 120
       Top = 133
       Width = 277
       Height = 18
-      Caption = 'Update Date : 2022-02-06  PM 14:58'
+      Caption = 'Update Date : 2022-02-14  PM 18:42'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWhite
       Font.Height = -15
