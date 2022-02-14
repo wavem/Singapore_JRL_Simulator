@@ -2009,6 +2009,7 @@ object FormMain: TFormMain
   end
   object tm_Sender: TTimer
     Enabled = False
+    Interval = 250
     OnTimer = tm_SenderTimer
     Left = 592
   end
