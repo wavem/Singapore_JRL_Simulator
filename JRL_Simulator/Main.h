@@ -167,6 +167,11 @@ public: // libxl
     bool __fastcall LoadSendBufferInto();
     void __fastcall LoadRealTimeProtocolContents(int _row, int _col);
 
+public: // Real Time Protocol
+	UnicodeString m_RTimeSelectedCar;
+    UnicodeString m_RTimeSelectedDevice;
+    int __fastcall LoadSendBufferOffset();
+
 
 
 

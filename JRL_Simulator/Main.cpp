@@ -122,6 +122,9 @@ void __fastcall TFormMain::InitProgram() {
 	m_MCastPort = 0;
 	memset(m_SendBuf, 0, MCAST_SEND_BUF_SIZE);
 	memset(m_RecvBuf, 0, MCAST_RECV_BUF_SIZE);
+
+    m_RTimeSelectedCar = L"";
+    m_RTimeSelectedDevice = L"";
 	//m_SendProtocolSize = 0;
 	//m_RecvProtocolSize = 0;
 	//m_bIsBigEndian = false;
@@ -239,6 +242,21 @@ bool __fastcall TFormMain::LoadRealTimeProtocolList() {
 //---------------------------------------------------------------------------
 
 bool __fastcall TFormMain::LoadSendBufferInto() {
+
+
+
+
+	// 찾는 형식으로 가자.
+    // 현재 왼쪽 Grid 에서 Protocol 선택 시,
+    // 현재 선택된 차량과 프로토콜 명을 기억하도록 하자.
+    // 그리고 그 녀석의 이름으로 Map Sheet 에서 Byte Index 위치와 크기를 알아내도록 하자.
+
+
+
+
+
+
+
 
 
 
@@ -604,6 +622,10 @@ void __fastcall TFormMain::LoadRealTimeProtocolContents(int _row, int _col) {
         t_ByteIdx++;
         t_GridRow++;
     }
+
+    // Save Selection Info
+    m_RTimeSelectedCar = grid_SignalList->Cells[_col][0];
+    m_RTimeSelectedDevice = grid_SignalList->Cells[_col][_row];
 }
 //---------------------------------------------------------------------------
 
@@ -612,6 +634,14 @@ void __fastcall TFormMain::grid_ProtocolGetAlignment(TObject *Sender, int ARow, 
 {
 	HAlign = taCenter;
 	VAlign = vtaCenter;
+}
+//---------------------------------------------------------------------------
+
+int __fastcall TFormMain::LoadSendBufferOffset() {
+
+
+
+	return -1;
 }
 //---------------------------------------------------------------------------
 

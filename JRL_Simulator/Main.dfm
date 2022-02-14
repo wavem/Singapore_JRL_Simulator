@@ -4,7 +4,7 @@ object FormMain: TFormMain
   BorderIcons = [biSystemMenu, biMinimize]
   Caption = 'JRLP Simulator'
   ClientHeight = 976
-  ClientWidth = 1368
+  ClientWidth = 1394
   Color = clBtnFace
   DoubleBuffered = True
   Font.Charset = DEFAULT_CHARSET
@@ -20,17 +20,18 @@ object FormMain: TFormMain
   object ___pnBase: TPanel
     Left = 0
     Top = 122
-    Width = 1368
+    Width = 1394
     Height = 854
     Align = alClient
     BevelOuter = bvNone
     Color = 3355443
     ParentBackground = False
     TabOrder = 0
+    ExplicitWidth = 1368
     object memo: TAdvMemo
       Left = 0
       Top = 712
-      Width = 1368
+      Width = 1394
       Height = 142
       Cursor = crIBeam
       ActiveLineSettings.ShowActiveLine = False
@@ -146,29 +147,33 @@ object FormMain: TFormMain
       UseStyler = True
       Version = '3.4.1.0'
       WordWrap = wwNone
+      ExplicitWidth = 1368
     end
     object Notebook_Main: TNotebook
       Left = 0
       Top = 0
-      Width = 1368
+      Width = 1394
       Height = 712
       Align = alClient
       PageIndex = 1
       TabOrder = 1
+      ExplicitWidth = 1368
       object TPage
         Left = 0
         Top = 0
         Caption = 'Connection'
+        ExplicitWidth = 1368
         object __pnBase_00_Connection: TPanel
           Left = 0
           Top = 0
-          Width = 1368
+          Width = 1394
           Height = 712
           Align = alClient
           BevelOuter = bvNone
           Color = 3355443
           ParentBackground = False
           TabOrder = 0
+          ExplicitWidth = 1368
           object lb_Title_Local_IP: TLabel
             Left = 24
             Top = 30
@@ -550,18 +555,20 @@ object FormMain: TFormMain
         Top = 0
         HelpContext = 1
         Caption = 'Protocol'
+        ExplicitWidth = 1368
         object __pnBase_01_Protocol: TPanel
           Left = 0
           Top = 0
-          Width = 1368
+          Width = 1394
           Height = 712
           Align = alClient
           BevelOuter = bvNone
           Color = 3355443
           ParentBackground = False
           TabOrder = 0
+          ExplicitWidth = 1368
           DesignSize = (
-            1368
+            1394
             712)
           object grid_SignalList: TAdvStringGrid
             Tag = 1
@@ -702,7 +709,7 @@ object FormMain: TFormMain
             Tag = 2
             Left = 323
             Top = 27
-            Width = 850
+            Width = 876
             Height = 598
             Cursor = crDefault
             Anchors = [akLeft, akTop, akRight, akBottom]
@@ -839,16 +846,17 @@ object FormMain: TFormMain
             ShowSelection = False
             SortSettings.DefaultFormat = ssAutomatic
             Version = '7.8.0.1'
+            ExplicitWidth = 850
             ColWidths = (
               34
-              100
-              100
-              100
-              99
-              99
-              99
-              99
-              99)
+              103
+              103
+              103
+              103
+              103
+              102
+              102
+              102)
             RowHeights = (
               22
               44
@@ -896,16 +904,18 @@ object FormMain: TFormMain
         Top = 0
         HelpContext = 2
         Caption = 'Setting'
+        ExplicitWidth = 1368
         object __pnBase_02_Setting: TPanel
           Left = 0
           Top = 0
-          Width = 1368
+          Width = 1394
           Height = 712
           Align = alClient
           BevelOuter = bvNone
           Color = 3355443
           ParentBackground = False
           TabOrder = 0
+          ExplicitWidth = 1368
         end
       end
       object TPage
@@ -913,16 +923,18 @@ object FormMain: TFormMain
         Top = 0
         HelpContext = 3
         Caption = 'Generator'
+        ExplicitWidth = 1368
         object __pnBase_03_Generator: TPanel
           Left = 0
           Top = 0
-          Width = 1368
+          Width = 1394
           Height = 712
           Align = alClient
           BevelOuter = bvNone
           Color = 3355443
           ParentBackground = False
           TabOrder = 0
+          ExplicitWidth = 1368
         end
       end
     end
@@ -930,7 +942,7 @@ object FormMain: TFormMain
   object MainRibbonMenu: TdxRibbon
     Left = 0
     Top = 0
-    Width = 1368
+    Width = 1394
     Height = 122
     Cursor = crHandPoint
     BarManager = BarMgr
@@ -938,6 +950,7 @@ object FormMain: TFormMain
     Contexts = <>
     TabOrder = 1
     TabStop = False
+    ExplicitWidth = 1368
     object Menu: TdxRibbonTab
       Active = True
       Caption = 'Menu'
