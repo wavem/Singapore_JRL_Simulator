@@ -6,7 +6,7 @@
 //---------------------------------------------------------------------------
 USEFORM("Main.cpp", FormMain);
 USEFORM("Dlg_Version.cpp", FormVersion);
-USEFORM("Dlg_DataInputEdit.cpp", Form1);
+USEFORM("Dlg_DataInputEdit.cpp", FormDataInputEdit);
 //---------------------------------------------------------------------------
 int WINAPI _tWinMain(HINSTANCE, HINSTANCE, LPTSTR, int)
 {
@@ -16,7 +16,7 @@ int WINAPI _tWinMain(HINSTANCE, HINSTANCE, LPTSTR, int)
 		Application->MainFormOnTaskBar = true;
 		Application->CreateForm(__classid(TFormMain), &FormMain);
 		Application->CreateForm(__classid(TFormVersion), &FormVersion);
-		Application->CreateForm(__classid(TForm1), &Form1);
+		Application->CreateForm(__classid(TFormDataInputEdit), &FormDataInputEdit);
 		Application->Run();
 	}
 	catch (Exception &exception)

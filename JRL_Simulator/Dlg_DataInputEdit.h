@@ -7,15 +7,42 @@
 #include <Vcl.Controls.hpp>
 #include <Vcl.StdCtrls.hpp>
 #include <Vcl.Forms.hpp>
+#include "AdvEdit.hpp"
+#include "AdvGlassButton.hpp"
+#include "AdvSmoothSlider.hpp"
+#include <Vcl.ExtCtrls.hpp>
 //---------------------------------------------------------------------------
-class TForm1 : public TForm
+class TFormDataInputEdit : public TForm
 {
 __published:	// IDE-managed Components
+	TPanel *___pnBase_DataInputEdit;
+	TAdvEdit *ed_Data;
+	TAdvGlassButton *btn_Input;
+	TAdvSmoothSlider *Slider_HexDec;
+	void __fastcall btn_InputClick(TObject *Sender);
+	void __fastcall ed_DataKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
+	void __fastcall Slider_HexDecStateChanged(TObject *Sender, TAdvSmoothSliderState State,
+          double Value);
 private:	// User declarations
 public:		// User declarations
-	__fastcall TForm1(TComponent* Owner);
+	__fastcall TFormDataInputEdit(TComponent* Owner);
+
+public: // Basic Functions
+	__fastcall TFormDataInputEdit(BYTE* _pBuffer, int _ByteIdx, int _ByteSize, int _BitIdx, int _BitSize, int _ProtocolType); // Constructor
+
+public: // Member Variables
+	BYTE* m_pBuffer;
+	int m_ByteIdx;
+	int m_BitIdx;
+	int m_ByteSize;
+	int m_BitSize;
+	int m_ProtocolType;
+
+public: // Member Functions
+	void __fastcall InputDataRoutine();
+	void __fastcall ChangeHexDecMode();
 };
 //---------------------------------------------------------------------------
-extern PACKAGE TForm1 *Form1;
+extern PACKAGE TFormDataInputEdit *FormDataInputEdit;
 //---------------------------------------------------------------------------
 #endif

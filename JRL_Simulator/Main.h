@@ -171,7 +171,7 @@ public: // SOCKET
 
 public: // libxl
 	bool __fastcall LoadRealTimeProtocolList();
-    bool __fastcall LoadSendBufferInto();
+    bool __fastcall LoadSendBufferInfo();
     void __fastcall LoadRealTimeProtocolContents(int _row, int _col);
 
 public: // Real Time Protocol

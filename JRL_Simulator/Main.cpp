@@ -11,6 +11,7 @@
 //#include <tlhelp32.h>
 //#include <stdio.h>
 //#include <shlwapi.h>
+#include "Dlg_DataInputEdit.h"
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 #pragma link "cxClasses"
@@ -191,7 +192,7 @@ bool __fastcall TFormMain::InitConfigExcelFile() {
             }
 
             // Load Send Buffer Information
-            if(LoadSendBufferInto()) {
+            if(LoadSendBufferInfo()) {
             	PrintMsg(L"Send Buffer Init Complete");
             } else {
             	return false;
@@ -248,7 +249,7 @@ bool __fastcall TFormMain::LoadRealTimeProtocolList() {
 }
 //---------------------------------------------------------------------------
 
-bool __fastcall TFormMain::LoadSendBufferInto() {
+bool __fastcall TFormMain::LoadSendBufferInfo() {
 
 
 
@@ -701,7 +702,6 @@ void __fastcall TFormMain::grid_ProtocolClickCell(TObject *Sender, int ARow, int
 
 void __fastcall TFormMain::grid_ProtocolDblClickCell(TObject *Sender, int ARow, int ACol)
 {
-#if 0
 	// Pre-Return
 	if(ARow == 0 || ACol == 0) return;
 
@@ -718,11 +718,11 @@ void __fastcall TFormMain::grid_ProtocolDblClickCell(TObject *Sender, int ARow, 
 	// Routine Here...
 
 	// Determine Send or Recv Protocol
-	if(t_Tag == SEND_PROTOCOL_TYPE) {
-		t_pBuffer = m_SendBuf;
-	} else if(t_Tag == RECV_PROTOCOL_TYPE) {
-		t_pBuffer = m_RecvBuf;
-	} else return;
+	//if(t_Tag == SEND_PROTOCOL_TYPE) {
+		t_pBuffer = (m_SendBuf + m_RTimeByteOffset);
+	//} else if(t_Tag == RECV_PROTOCOL_TYPE) {
+	//	t_pBuffer = m_RecvBuf;
+	//} else return;
 
 	// Cell Merge Variables
 	TPoint t_point;
@@ -739,7 +739,6 @@ void __fastcall TFormMain::grid_ProtocolDblClickCell(TObject *Sender, int ARow, 
 	delete p_dlg;
 
 	DisplayBufferDataIntoGrid(t_Tag);
-#endif
 }
 //---------------------------------------------------------------------------
 
