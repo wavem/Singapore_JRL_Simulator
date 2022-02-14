@@ -126,6 +126,11 @@ __published:	// IDE-managed Components
 	void __fastcall btn_Create_SocketClick(TObject *Sender);
 	void __fastcall tm_SenderTimer(TObject *Sender);
 	void __fastcall MainBtn_Test_2Click(TObject *Sender);
+	void __fastcall grid_SignalListGetAlignment(TObject *Sender, int ARow, int ACol,
+          TAlignment &HAlign, TVAlignment &VAlign);
+	void __fastcall grid_SignalListClickCell(TObject *Sender, int ARow, int ACol);
+	void __fastcall grid_ProtocolGetAlignment(TObject *Sender, int ARow, int ACol, TAlignment &HAlign,
+          TVAlignment &VAlign);
 private:	// User declarations
 public:		// User declarations
 	__fastcall TFormMain(TComponent* Owner);
@@ -160,6 +165,7 @@ public: // SOCKET
 public: // libxl
 	bool __fastcall LoadRealTimeProtocolList();
     bool __fastcall LoadSendBufferInto();
+    void __fastcall LoadRealTimeProtocolContents(int _row, int _col);
 
 
 

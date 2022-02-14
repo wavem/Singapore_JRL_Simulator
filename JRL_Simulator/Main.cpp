@@ -484,3 +484,134 @@ void __fastcall TFormMain::MainBtn_Test_2Click(TObject *Sender)
 }
 //---------------------------------------------------------------------------
 
+void __fastcall TFormMain::grid_SignalListGetAlignment(TObject *Sender, int ARow,
+          int ACol, TAlignment &HAlign, TVAlignment &VAlign)
+{
+	HAlign = taCenter;
+	VAlign = vtaCenter;
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TFormMain::grid_SignalListClickCell(TObject *Sender, int ARow, int ACol)
+{
+	// Common
+    TAdvStringGrid* p_grid = (TAdvStringGrid*)Sender;
+    UnicodeString tempStr = L"";
+
+	// Pre-Return
+    tempStr = p_grid->Cells[ACol][ARow];
+    if(tempStr == L"") return;
+    if(ARow == 0) return;
+
+    // Reset Cell Colors
+    for(int row = 1 ; row < p_grid->RowCount ; row++) {
+    	p_grid->Colors[0][row] = 0x3C3C3C;
+        p_grid->Colors[1][row] = 0x3C3C3C;
+        p_grid->Colors[2][row] = 0x3C3C3C;
+    }
+
+    // Set Cell Color
+    p_grid->Colors[ACol][ARow] = 0x207DBB;
+
+    // Load Protocol
+    LoadRealTimeProtocolContents(ARow, ACol);
+
+    // Test Code (Random Generation)
+	//SetRandomValueIntoProtocolGrid();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TFormMain::LoadRealTimeProtocolContents(int _row, int _col) {
+
+	// Common
+    UnicodeString tempStr = L"";
+    UnicodeString t_SheetName = L"";
+    int t_RowCount = grid_Protocol->RowCount;
+    libxl::Sheet* t_sheet = NULL;
+    t_sheet = getSheetByName(m_Book, L"RT_Protocol_List");
+    if(t_sheet == NULL) {
+    	PrintMsg(L"Cannot open RT_Protocol_List sheet");
+        return;
+    }
+
+    // Get Target Sheet Name
+    t_SheetName = getCellValue(t_sheet, _row + 3, _col + 6);
+    tempStr.sprintf(L"Target : %s", t_SheetName.c_str());
+    PrintMsg(tempStr);
+    if(t_SheetName == NULL) {
+    	PrintMsg(L"There is no sheet info");
+        return;
+    }
+
+    // Get Target Sheet
+    t_sheet = getSheetByName(m_Book, t_SheetName);
+    if(t_sheet == NULL) {
+    	tempStr.sprintf(L"There is no sheet (%s)", t_SheetName.c_str());
+        PrintMsg(tempStr);
+        grid_Protocol->ClearNormalCells();
+    	grid_Protocol->RowCount = 2;
+        return;
+    }
+
+    // Load Protocol Routine
+    int t_LastRow = t_sheet->lastFilledRow();
+    int t_DefaultRowCnt = 5; // UESR DEFINE
+    int t_ColIdx = 2; // EXCEL COL INDEX START
+    int t_RowIdx = 5; // EXCEL ROW INDEX START
+    int t_GridRow = 1;
+    int t_GridCol = 1;
+    bool t_bIsMerged = false;
+    int t_MergedRowIdx_S = 0; // S==START
+    int t_MergedRowIdx_E = 0; // E==END
+    int t_MergedColIdx_S = 0; // S==START
+    int t_MergedColIdx_E = 0; // E==END
+    int t_V_gap = 0; // Vertical Gap
+    int t_H_gap = 0; // Horizontal Gap
+    int t_TotalByteCount = t_LastRow - t_DefaultRowCnt;
+    int t_ByteIdx = 0;
+
+    // Clear Protocol Grid
+    grid_Protocol->ClearNormalCells();
+    grid_Protocol->RowCount = 2;
+    grid_Protocol->RowCount = t_TotalByteCount + 1;
+
+    // Print Byte Index
+    for(int i = 0 ; i < grid_Protocol->RowCount ; i++) {
+        grid_Protocol->Cells[0][i + 1] = i;
+    }
+
+    // Merge Routine
+    while(t_ByteIdx < t_TotalByteCount) {
+    	t_GridCol = 1;
+    	for(int i = 0 ; i < 8 ; i++) {
+        	tempStr = getCellValue(t_sheet, t_RowIdx, t_ColIdx + i);
+            grid_Protocol->Cells[t_GridCol][t_GridRow] = tempStr;
+
+        	t_bIsMerged = t_sheet->getMerge(t_RowIdx, t_ColIdx + i, &t_MergedRowIdx_S, &t_MergedRowIdx_E, &t_MergedColIdx_S, &t_MergedColIdx_E);
+            if(t_bIsMerged) {
+            	t_H_gap = t_MergedColIdx_E - t_MergedColIdx_S + 1; // +1 is essential
+				t_V_gap = t_MergedRowIdx_E - t_MergedRowIdx_S;
+				grid_Protocol->MergeCells(t_GridCol, t_GridRow, t_H_gap, t_V_gap + 1);
+				i += (t_H_gap - 1);
+				t_ByteIdx += t_V_gap;
+				t_GridRow += t_V_gap;
+                t_GridCol += (t_H_gap - 1);
+            }
+            t_GridCol++;
+        }
+
+        t_RowIdx++;
+        t_ByteIdx++;
+        t_GridRow++;
+    }
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TFormMain::grid_ProtocolGetAlignment(TObject *Sender, int ARow, int ACol,
+          TAlignment &HAlign, TVAlignment &VAlign)
+{
+	HAlign = taCenter;
+	VAlign = vtaCenter;
+}
+//---------------------------------------------------------------------------
+
