@@ -118,6 +118,7 @@ __published:	// IDE-managed Components
 	TAdvGlassButton *btn_Create_Socket;
 	TdxBarLargeButton *MainBtn_Test_2;
 	TAdvStringGrid *grid_SignalList;
+	TAdvStringGrid *grid_Protocol;
 	void __fastcall MainButtonClick(TObject *Sender);
 	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
 	void __fastcall MainBtn_VersionClick(TObject *Sender);
