@@ -170,7 +170,9 @@ public: // libxl
 public: // Real Time Protocol
 	UnicodeString m_RTimeSelectedCar;
     UnicodeString m_RTimeSelectedDevice;
-    int __fastcall LoadSendBufferOffset();
+    bool __fastcall LoadSendBufferOffset();
+    int m_RTimeByteOffset;
+    int m_RtimeByteSize;
 
 
 

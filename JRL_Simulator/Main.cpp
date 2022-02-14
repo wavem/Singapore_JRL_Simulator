@@ -125,6 +125,8 @@ void __fastcall TFormMain::InitProgram() {
 
     m_RTimeSelectedCar = L"";
     m_RTimeSelectedDevice = L"";
+    m_RTimeByteOffset = 0;
+    m_RtimeByteSize = 0;
 	//m_SendProtocolSize = 0;
 	//m_RecvProtocolSize = 0;
 	//m_bIsBigEndian = false;
@@ -626,6 +628,12 @@ void __fastcall TFormMain::LoadRealTimeProtocolContents(int _row, int _col) {
     // Save Selection Info
     m_RTimeSelectedCar = grid_SignalList->Cells[_col][0];
     m_RTimeSelectedDevice = grid_SignalList->Cells[_col][_row];
+
+	if(LoadSendBufferOffset()) {
+    	//PrintMsg(L"Load Byte Offset Complete");
+    } else {
+    	PrintMsg(L"Can't Load Byte Offset and Size");
+    }
 }
 //---------------------------------------------------------------------------
 
@@ -637,11 +645,43 @@ void __fastcall TFormMain::grid_ProtocolGetAlignment(TObject *Sender, int ARow, 
 }
 //---------------------------------------------------------------------------
 
-int __fastcall TFormMain::LoadSendBufferOffset() {
+bool __fastcall TFormMain::LoadSendBufferOffset() {
+
+	// Common
+    UnicodeString tempStr = L"";
+
+    // Get Map Sheet Pointer
+    libxl::Sheet* t_sheet = NULL;
+    t_sheet = getSheetByName(m_Book, L"Map");
+    if(t_sheet == NULL) {
+    	PrintMsg(L"Cannot open Map sheet");
+        return false;
+    }
+
+    // Find ByteOffset Routine
+    UnicodeString t_CarStr = L"";
+    UnicodeString t_ProtocolStr = L"";
+    int t_ByteOffset = -1;
+    int t_ProtocolSize = -1;
+
+    for(int row = 3 ; t_sheet->lastFilledRow() ; row++) {
+    	t_CarStr      = getCellValue(t_sheet, row, 4);
+    	t_ProtocolStr = getCellValue(t_sheet, row, 5);
+
+        if(t_CarStr == m_RTimeSelectedCar && t_ProtocolStr == m_RTimeSelectedDevice) {
+        	m_RTimeByteOffset   = getCellValueI(t_sheet, row, 1);
+            m_RtimeByteSize = getCellValueI(t_sheet, row, 2);
+
+            tempStr.sprintf(L"Byte Offset : %d, Protocol Size : %d", m_RTimeByteOffset, m_RtimeByteSize);
+            PrintMsg(tempStr);
+            return true;
+        }
+    }
 
 
-
-	return -1;
+    m_RTimeByteOffset = -1;
+    m_RtimeByteSize = 0;
+    return false;
 }
 //---------------------------------------------------------------------------
 
