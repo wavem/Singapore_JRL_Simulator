@@ -5,6 +5,9 @@
 //---------------------------------------------------------------------------
 #include <System.Classes.hpp>
 
+// Program Version
+#define PROGRAM_VERSION			L"Version : 0.0.1"
+#define PROGRAM_UPDATE_DATE     L"Update Date : 2022-02-15  PM 14:19"
 
 // Communication
 #define MULTICAST_PORT	14759
@@ -12,7 +15,7 @@
 #define LOCAL_IP		"192.168.0.132"
 
 // Define Max Data Size
-#define MCAST_SEND_BUF_SIZE		8192
+#define MCAST_SEND_BUF_SIZE		10000
 #define MCAST_RECV_BUF_SIZE		1500
 
 
