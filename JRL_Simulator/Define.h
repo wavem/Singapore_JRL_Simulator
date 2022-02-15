@@ -7,7 +7,7 @@
 
 // Program Version
 #define PROGRAM_VERSION			L"Version : 0.0.1"
-#define PROGRAM_UPDATE_DATE     L"Update Date : 2022-02-15  PM 14:19"
+#define PROGRAM_UPDATE_DATE     L"Update Date : 2022-02-15  PM 14:27"
 
 // Communication
 #define MULTICAST_PORT	14759

@@ -228,6 +228,9 @@ bool __fastcall TFormMain::LoadRealTimeProtocolList() {
     t_LastRow = t_sheet->lastFilledRow();
     t_RowLimit = t_LastRow - t_row;
 
+    // Set Grid Row Count
+    grid_SignalList->RowCount = t_RowLimit + 1;
+
     // Read Contents from the Sheet
     if(t_sheet) {
     	for(int i = 0 ; i < t_RowLimit ; i++) {
